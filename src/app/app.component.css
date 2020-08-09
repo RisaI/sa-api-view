@@ -1,0 +1,27 @@
+.nav-btn {
+    font-size: 24px;
+    margin: 0.2em;
+    cursor: pointer;
+    color: rgb(129, 129, 129) !important;
+}
+
+.nav-btn.active {
+    color: white !important;
+}
+
+.content-wrapper {
+    height: 100%;
+}
+
+.container-graphs {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0;
+    align-items: stretch;
+
+    flex-direction: column;
+}
+
+.container-graphs.horizontal {
+    flex-direction: row;
+}

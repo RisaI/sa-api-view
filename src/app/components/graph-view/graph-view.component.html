@@ -1,0 +1,7 @@
+<h1 style="text-align: 'center'">{{graph.title}}</h1>
+<div class="graph-content">
+    <div *ngIf="graph.traces.length <= 0; else content">Graf nemá žádné křivky</div>
+    <ng-template #content>
+        <!-- TODO: -->
+    </ng-template>
+</div>

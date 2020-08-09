@@ -1,0 +1,10 @@
+<ul class="list-group">
+    <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let trace of traces"
+        [class.active]="selected.indexOf(trace.id) >= 0"
+        (click)="toggle.emit(trace.id)"
+    >
+        {{trace.title}}
+    </li>
+</ul>

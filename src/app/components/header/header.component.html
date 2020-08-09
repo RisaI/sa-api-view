@@ -1,0 +1,18 @@
+<header class="main-header">
+
+  <a href="" class="logo">
+    <span class="logo-mini"><b>S</b>an</span>
+    <span class="logo-lg"><b>Storage Analytics</b></span>
+  </a>
+
+  <nav class="navbar navbar-static-top" role="navigation">
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+        <ng-content></ng-content>
+        <li class="nav-item"><a class="nav-link" href="#" (click)="changeOrientation.emit()">Prohodit orientaci</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" (click)="addGraph.emit()">Přidat graf</a></li>
+      </ul>
+    </div>
+  </nav>
+
+</header>

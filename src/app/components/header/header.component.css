@@ -1,0 +1,20 @@
+.active {
+  background-color: rgba(30, 40, 44, 0.7);
+
+  border-bottom: 4px #1ABB9C solid;
+  /*box-shadow: 0 15px 15px rgba(145, 92, 182, .4);*/
+}
+
+.btn {
+  padding-bottom: 11px;
+  padding-top: 13px;
+}
+
+.sa-logo {
+  height: 50px;
+}
+
+.logo-title {
+  width: 200px;
+  margin: auto;
+}
