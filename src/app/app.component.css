@@ -5,6 +5,10 @@
     color: rgb(129, 129, 129) !important;
 }
 
+.btn-menu {
+    margin-left: auto;
+}
+
 .nav-btn.active {
     color: white !important;
 }

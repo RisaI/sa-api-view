@@ -22,3 +22,8 @@ interface Trace {
     
     xRange?: [ any, any ];
 }
+
+type TraceAction = 'sel-unq' | 'sel-all' | 'inv' | 'des' | 'tres' |
+    'sort' | 'filter' | 'search' | 'sum' | 'avg' |
+    'del-zero' | 'del-sel' | 'del-unsel' |
+    'name-sync' | 'zoom-sync' | 'bind-sync';

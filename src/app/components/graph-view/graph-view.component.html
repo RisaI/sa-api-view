@@ -3,5 +3,6 @@
     <div *ngIf="graph.traces.length <= 0; else content">Graf nemá žádné křivky</div>
     <ng-template #content>
         <!-- TODO: -->
+        <plotly-plot [data]="loadedData" [config]="{ responsive: true }" [layout]="{ autosize: true }"></plotly-plot>
     </ng-template>
 </div>

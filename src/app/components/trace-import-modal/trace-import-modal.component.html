@@ -1,0 +1,70 @@
+<div class="modal" tabindex="-1" role="dialog" [class.show]="show">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="toggle.emit()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Import křivky</h4>
+      </div>
+
+      <div class="modal-body">
+        <form class="import-form" *ngIf="sources !== undefined; else loading">
+          <div class="col">
+            <div class="form-group">
+              <label>Zdroj:</label>
+              <select class="form-control" type="select" value="{{selectedSource.id}}" (change)="selectSource($event.currentTarget.value)">
+                <option *ngFor="let s of sources" value="{{s.id}}">{{s.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Set:</label>
+              <select class="form-control" type="select" value="{{selectedTrace.id}}" (change)="selectTrace($event.currentTarget.value)">
+                <option *ngFor="let s of getAvailableDatasets()" value="{{s.id}}">{{s.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Varianta:</label>
+              <select class="form-control" type="select" value="{{selectedVariant}}" (change)="selectVariant($event.currentTarget.value)" [disabled]="!hasVariants()">
+                <option *ngFor="let s of getAvailableVariants()" value="{{s}}">{{s}}</option>
+              </select>
+            </div>
+            <hr/>
+            <div class="form-group">
+              <label>Popis:</label>
+              <input class="form-control" type="text" value="{{selectedTrace.description}}" readonly>
+            </div>
+            <div class="form-group">
+              <label>Typ osy x:</label>
+              <input class="form-control" type="text" value="{{selectedTrace.xType}}" readonly>
+            </div>
+            <div class="form-group">
+              <label>Typ osy y:</label>
+              <input class="form-control" type="text" value="{{selectedTrace.yType}}" readonly>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group"><label>ID křivky:</label><input class="form-control" type="text" value="{{id}}" (change)="id = $event.target.value"></div>
+            <div class="form-group"><label>Název křivky:</label><input class="form-control" type="text" value="{{title}}" (change)="title = $event.target.value"></div>
+            <div class="form-group">
+              <label>Od:</label>
+              <!-- <input class="form-control" type="datetime" value="{{from}}" (change)="from = $event.target.value"> -->
+            </div>
+            <div class="form-group">
+              <label>Do:</label>
+              <!-- <input class="form-control" type="datetime" value="{{to}}" (change)="to = $event.target.value"> -->
+            </div>
+          </div>
+          <!-- <div class="form-group"><label>Název:</label><input class="form-control" type="text" value=""  (change)=""></div> -->
+        </form>
+
+        <ng-template #loading>
+          Načítají se zdroje...
+        </ng-template>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="toggle.emit()">Zrušit</button>
+        <button type="button" class="btn btn-primary" (click)="onImport()">Importovat</button>
+      </div>
+    </div>
+  </div>
+</div>

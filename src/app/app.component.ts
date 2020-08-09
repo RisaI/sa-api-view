@@ -12,7 +12,7 @@ export class AppComponent {
   traceImportOpen = false;
 
   graphs: Graph[] = [];
-  selectedId?: Graph['id'] = undefined;
+  selectedGraph?: Graph = undefined;
   selectedTraces: Trace['id'][] = [];
 
   onChangeOrientation(): void {
@@ -31,12 +31,12 @@ export class AppComponent {
     } ];
   }
 
-  selectedGraph = () => this.graphs.find(g => g.id === this.selectedId);
-  canMoveUp = () => this.graphs.findIndex(g => g.id === this.selectedId) > 0;
-  canMoveDown = () => this.graphs.findIndex(g => g.id === this.selectedId) < this.graphs.length - 1;
+  selectedGraphTraceIds = () => this.selectedGraph?.traces?.map(t => t.id);
+  canMoveUp = () => this.graphs.indexOf(this.selectedGraph) > 0;
+  canMoveDown = () => this.graphs.indexOf(this.selectedGraph) < this.graphs.length - 1;
 
   moveUp(): void {
-    const selIdx = this.graphs.findIndex(g => g.id === this.selectedId);
+    const selIdx = this.graphs.indexOf(this.selectedGraph);
 
     if (selIdx >= 0) {
       const temp = this.graphs[selIdx - 1];
@@ -47,7 +47,7 @@ export class AppComponent {
   }
 
   moveDown(): void {
-    const selIdx = this.graphs.findIndex(g => g.id === this.selectedId);
+    const selIdx = this.graphs.indexOf(this.selectedGraph);
 
     if (selIdx >= 0) {
       const temp = this.graphs[selIdx + 1];
@@ -58,15 +58,59 @@ export class AppComponent {
   }
 
   removeGraph(): void {
-    const selIdx = this.graphs.findIndex(g => g.id === this.selectedId);
+    const selIdx = this.graphs.indexOf(this.selectedGraph);
     this.graphs.splice(selIdx, 1);
 
     if (selIdx < this.graphs.length) {
-      this.selectedId = this.graphs[selIdx].id;
+      this.selectedGraph = this.graphs[selIdx];
     } else if (this.graphs.length > 0) {
-      this.selectedId = this.graphs[this.graphs.length - 1].id;
+      this.selectedGraph = this.graphs[this.graphs.length - 1];
     } else {
-      this.selectedId = undefined;
+      this.selectedGraph = undefined;
+    }
+  }
+
+  importTrace(trace: Trace): void {
+    this.selectedGraph.traces = [ ...this.selectedGraph.traces, trace ];
+  }
+
+  toggleTrace(id: string): void {
+    if (this.selectedTraces.indexOf(id) >= 0) {
+      this.selectedTraces = this.selectedTraces.filter(t => t !== id);
+    } else {
+      this.selectedTraces = [ ...this.selectedTraces, id];
+    }
+  }
+
+  traceControl(action: TraceAction): void {
+    switch (action) {
+      case 'sel-all':
+        this.selectedTraces = this.selectedGraph.traces.map(t => t.id);
+        break;
+      case 'sel-unq':
+        // TODO:
+        break;
+      case 'des':
+        this.selectedTraces = [];
+        break;
+      case 'inv':
+        this.selectedTraces = this.selectedGraph.traces.map(t => t.id).filter(t => this.selectedTraces.indexOf(t) < 0);
+        break;
+      case 'tres':
+        // TODO:
+        break;
+
+      case 'del-zero':
+        // TODO:
+        break;
+      case 'del-sel':
+        this.selectedGraph.traces = this.selectedGraph.traces.filter(t => this.selectedTraces.indexOf(t.id) < 0);
+        this.selectedTraces = [];
+        break;
+      case 'del-unsel':
+        this.selectedGraph.traces = this.selectedGraph.traces.filter(t => this.selectedTraces.indexOf(t.id) >= 0);
+        this.selectedTraces = [];
+        break;
     }
   }
 }

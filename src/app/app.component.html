@@ -6,7 +6,7 @@
 <app-side-menu>
 
   <!-- Graph controls -->
-  <ng-container *ngIf="selectedId !== undefined; else noGraph">
+  <ng-container *ngIf="selectedGraph !== undefined; else noGraph">
     <div>
       <a
         class="nav-btn ion-arrow-up-c"
@@ -22,13 +22,17 @@
     </div>
     <ul class="sidebar-menu"><li class="header">VLASTNOSTI</li></ul>
     <form style="color: white">
-      <div class="form-group"><label>Název:</label><input class="form-control" type="text" value="{{selectedGraph().title}}"  (change)="selectedGraph().title  = $event.target.value"></div>
-      <div class="form-group"><label>Osa x:</label><input class="form-control" type="text" value="{{selectedGraph().xLabel}}" (change)="selectedGraph().xLabel = $event.target.value"></div>
-      <div class="form-group"><label>Osa y:</label><input class="form-control" type="text" value="{{selectedGraph().yLabel}}" (change)="selectedGraph().yLabel = $event.target.value"></div>
+      <div class="form-group"><label>Název:</label><input class="form-control" type="text" value="{{selectedGraph.title}}"  (change)="selectedGraph().title  = $event.target.value"></div>
+      <div class="form-group"><label>Osa x:</label><input class="form-control" type="text" value="{{selectedGraph.xLabel}}" (change)="selectedGraph().xLabel = $event.target.value"></div>
+      <div class="form-group"><label>Osa y:</label><input class="form-control" type="text" value="{{selectedGraph.yLabel}}" (change)="selectedGraph().yLabel = $event.target.value"></div>
     </form>
-    <ul class="sidebar-menu"><li class="header">KŘIVKY</li></ul>
-    <app-trace-controls></app-trace-controls>
-    <app-trace-list [traces]="selectedGraph().traces" [selected]="selectedTraces"></app-trace-list>
+    <ul class="sidebar-menu"><li class="header" style="display: flex; align-items: center;">KŘIVKY<span class="btn btn-menu ion-android-add active" (click)="traceImportOpen = true"></span></li></ul>
+    <app-trace-controls (action)="traceControl($event)"></app-trace-controls>
+    <app-trace-list
+      [traces]="selectedGraph.traces"
+      [selected]="selectedTraces"
+      (toggle)="toggleTrace($event)">
+    </app-trace-list>
   </ng-container>
 
   <ng-template #noGraph>
@@ -43,8 +47,11 @@
     <app-graph-view
       *ngFor="let graph of graphs"
       [graph]="graph"
-      [class.active]="selectedId === graph.id"
-      (click)="selectedId = graph.id">
+      [traces]="graph.traces"
+      [class.active]="selectedGraph === graph"
+      (click)="selectedGraph = graph; selectedTraces = []">
     </app-graph-view>
   </section>
 </div>
+
+<app-trace-import-modal [show]="traceImportOpen" [usedIds]="selectedGraphTraceIds()" (toggle)="traceImportOpen = false" (import)="importTrace($event)"></app-trace-import-modal>
