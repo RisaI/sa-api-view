@@ -17,6 +17,8 @@ export class GraphViewComponent implements OnInit, OnChanges {
   @Output() selected = new EventEmitter<Graph>();
 
   loadedData: any[] = [];
+  graphWidth = 0;
+  graphHeight = 0;
 
   constructor(private dataService: DataService) { }
 
@@ -40,7 +42,6 @@ export class GraphViewComponent implements OnInit, OnChanges {
           if (idx >= 0) {
             this.loadedData.find(d => d.id === trace.id).data = des;
           } else {
-            console.log(des);
             this.loadedData = [ ...this.loadedData, {
               id: trace.id,
               type: 'scattergl',
@@ -63,5 +64,10 @@ export class GraphViewComponent implements OnInit, OnChanges {
       this.loadedData = this.loadedData.filter(d => removedTraces.findIndex(t => t.id === d.id) < 0);
       newTraces.forEach(t => this.loadTrace(t));
     }
+  }
+
+  changeExtent(width: number, height: number): void {
+    this.graphWidth = width;
+    this.graphHeight = height;
   }
 }

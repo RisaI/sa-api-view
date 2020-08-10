@@ -14,6 +14,7 @@ import { TraceImportModalComponent } from './components/trace-import-modal/trace
 
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
+import { SizeMeModule } from 'ngx-size-me';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -31,6 +32,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     BrowserModule,
     HttpClientModule,
     PlotlyModule,
+    SizeMeModule,
   ],
   providers: [
     DataService,

@@ -22,9 +22,9 @@
     </div>
     <ul class="sidebar-menu"><li class="header">VLASTNOSTI</li></ul>
     <form style="color: white">
-      <div class="form-group"><label>Název:</label><input class="form-control" type="text" value="{{selectedGraph.title}}"  (change)="selectedGraph().title  = $event.target.value"></div>
-      <div class="form-group"><label>Osa x:</label><input class="form-control" type="text" value="{{selectedGraph.xLabel}}" (change)="selectedGraph().xLabel = $event.target.value"></div>
-      <div class="form-group"><label>Osa y:</label><input class="form-control" type="text" value="{{selectedGraph.yLabel}}" (change)="selectedGraph().yLabel = $event.target.value"></div>
+      <div class="form-group"><label>Název:</label><input class="form-control" type="text" value="{{selectedGraph.title}}"  (change)="selectedGraph.title  = $event.target.value"></div>
+      <div class="form-group"><label>Osa x:</label><input class="form-control" type="text" value="{{selectedGraph.xLabel}}" (change)="selectedGraph.xLabel = $event.target.value"></div>
+      <div class="form-group"><label>Osa y:</label><input class="form-control" type="text" value="{{selectedGraph.yLabel}}" (change)="selectedGraph.yLabel = $event.target.value"></div>
     </form>
     <ul class="sidebar-menu"><li class="header" style="display: flex; align-items: center;">KŘIVKY<span class="btn btn-menu ion-android-add active" (click)="traceImportOpen = true"></span></li></ul>
     <app-trace-controls (action)="traceControl($event)"></app-trace-controls>

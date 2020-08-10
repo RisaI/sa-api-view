@@ -1,8 +1,23 @@
 <h1 style="text-align: 'center'">{{graph.title}}</h1>
-<div class="graph-content">
+<div class="graph-content" sizeMe [monitorHeight]="true" (resize)="changeExtent($event.width, $event.height)">
     <div *ngIf="graph.traces.length <= 0; else content">Graf nemá žádné křivky</div>
     <ng-template #content>
-        <!-- TODO: -->
-        <plotly-plot [data]="loadedData" [config]="{ responsive: true }" [layout]="{ autosize: true }"></plotly-plot>
+        <plotly-plot
+            [data]="loadedData"
+            [config]="{
+                responsive: true,
+                displaylogo: false,
+
+                modeBarButtonsToRemove: ['select2d', 'lasso2d' ]
+            }"
+            [layout]="{
+                xaxis: { title: graph.xLabel },
+                yaxis: { title: graph.yLabel },
+                margin: { l: 48, t: 32, r: 16, b: 48 },
+
+                width: graphWidth,
+                height: graphHeight
+            }"
+        ></plotly-plot>
     </ng-template>
 </div>

@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~10.0.6",
     "@angular/router": "~10.0.6",
     "angular-plotly.js": "^2.0.0",
+    "ngx-size-me": "^9.0.6",
     "plotly.js": "^1.54.7",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
