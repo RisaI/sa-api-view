@@ -39,6 +39,8 @@ export class TraceImportModalComponent implements OnInit {
         return;
     }
 
+    console.log([ this.from, this. to ]);
+
     this.import.emit({
       id: this.id,
       title: this.title,
@@ -59,14 +61,19 @@ export class TraceImportModalComponent implements OnInit {
     this.selectedTrace = this.selectedSource.datasets.find(d => d.id === id);
     this.selectVariant(this.selectedTrace.variants?.length ? this.selectedTrace.variants[0] : undefined);
 
-    this.from = new Date(this.selectedTrace.availableXRange[0] * 1000);
-    this.to = new Date(this.selectedTrace.availableXRange[1] * 1000);
+    this.from = this.getMinDate();
+    this.to = this.getMaxDate();
   }
   selectVariant = (variant: string) => {
     this.selectedVariant = variant;
 
     this.id = this.generateId();
     this.title = this.generateTitle();
+  }
+
+  rangeChange(range: [Date, Date]): void {
+    this.from = range[0];
+    this.to = range[1];
   }
 
   generateId = () => this.selectedVariant ? `${this.selectedSource.id}:${this.selectedTrace.id}:${this.selectedVariant}` : `${this.selectedSource.id}:${this.selectedTrace.id}`;
@@ -76,4 +83,7 @@ export class TraceImportModalComponent implements OnInit {
   getAvailableDatasets = () => this.selectedSource?.datasets || [];
   hasVariants = () => this.selectedTrace?.variants?.length > 0;
   getAvailableVariants = () => this.hasVariants() ? this.selectedTrace.variants : [ 'žádné' ];
+
+  getMinDate = () => new Date(this.selectedTrace.availableXRange[0] * 1000);
+  getMaxDate = () => new Date(this.selectedTrace.availableXRange[1] * 1000);
 }

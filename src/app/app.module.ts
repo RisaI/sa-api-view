@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -15,6 +16,7 @@ import { TraceImportModalComponent } from './components/trace-import-modal/trace
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
 import { SizeMeModule } from 'ngx-size-me';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -30,9 +32,12 @@ PlotlyModule.plotlyjs = PlotlyJS;
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     PlotlyModule,
     SizeMeModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
   providers: [
     DataService,
