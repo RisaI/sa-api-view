@@ -42,27 +42,34 @@
             </div>
           </div>
           <div class="col">
-            <div class="form-group"><label>ID křivky:</label><input class="form-control" type="text" value="{{id}}" (change)="id = $event.target.value"></div>
-            <div class="form-group"><label>Název křivky:</label><input class="form-control" type="text" value="{{title}}" (change)="title = $event.target.value"></div>
-            <div class="form-group">
-              <label>Rozmezí:</label>
-              <input
-                class="form-control"
-                [owlDateTime]="timerangepicker"
-                [owlDateTimeTrigger]="timerangepicker"
-
-                [selectMode]="'range'"
-                [min]="getMinDate()"
-                [max]="getMaxDate()"
-
-                (dateTimeChange)="rangeChange($event.value)"
-
-                readonly
-              >
-              <owl-date-time #timerangepicker style="z-index: 2000;"></owl-date-time>
-            </div>
+            <form>
+              <div class="form-group"><label>ID křivky:</label><input class="form-control" type="text" name="id" [(ngModel)]="id"></div>
+              <div class="form-group"><label>Název křivky:</label><input class="form-control" type="text" name="title" [(ngModel)]="title"></div>
+              <div class="form-group">
+                <label>Rozmezí:</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    name="timeRange"
+  
+                    [owlDateTime]="timerangepicker"
+                    [owlDateTimeTrigger]="timerangepicker"
+  
+                    [selectMode]="'range'"
+                    [min]="getMinDate()"
+                    [max]="getMaxDate()"
+                    [(ngModel)]="timeRange"
+  
+                    readonly
+                  >
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" (click)="timeRange = [ getMinDate(), getMaxDate() ]">X</button>
+                  </span>
+                </div>
+                <owl-date-time #timerangepicker></owl-date-time>
+              </div>
+            </form>
           </div>
-          <!-- <div class="form-group"><label>Název:</label><input class="form-control" type="text" value=""  (change)=""></div> -->
         </form>
 
         <ng-template #loading>

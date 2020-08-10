@@ -21,8 +21,7 @@ export class TraceImportModalComponent implements OnInit {
 
   id: string;
   title: string;
-  from: Date;
-  to: Date;
+  timeRange: [Date, Date];
 
   constructor(private dataClient: DataService) { }
 
@@ -39,8 +38,6 @@ export class TraceImportModalComponent implements OnInit {
         return;
     }
 
-    console.log([ this.from, this. to ]);
-
     this.import.emit({
       id: this.id,
       title: this.title,
@@ -49,7 +46,7 @@ export class TraceImportModalComponent implements OnInit {
       datasetId: this.selectedTrace.id,
       variant: this.selectedVariant,
 
-      xRange: [ Math.floor(this.from.getTime() / 1000), Math.floor(this.to.getTime() / 1000) ]
+      xRange: this.timeRange.map(d => Math.floor(d.getTime() / 1000)) as [number, number]
     });
   }
 
@@ -61,8 +58,7 @@ export class TraceImportModalComponent implements OnInit {
     this.selectedTrace = this.selectedSource.datasets.find(d => d.id === id);
     this.selectVariant(this.selectedTrace.variants?.length ? this.selectedTrace.variants[0] : undefined);
 
-    this.from = this.getMinDate();
-    this.to = this.getMaxDate();
+    this.timeRange = [ this.getMinDate(), this.getMaxDate() ];
   }
   selectVariant = (variant: string) => {
     this.selectedVariant = variant;
@@ -72,8 +68,7 @@ export class TraceImportModalComponent implements OnInit {
   }
 
   rangeChange(range: [Date, Date]): void {
-    this.from = range[0];
-    this.to = range[1];
+    this.timeRange = range;
   }
 
   generateId = () => this.selectedVariant ? `${this.selectedSource.id}:${this.selectedTrace.id}:${this.selectedVariant}` : `${this.selectedSource.id}:${this.selectedTrace.id}`;
