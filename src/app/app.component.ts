@@ -106,17 +106,17 @@ export class AppComponent {
   }
 
   async filterTreshold(tres: number): Promise<void> {
-    const remaining: Trace[] = [];
+    const remaining: string[] = [];
 
     for (const trace of this.selectedGraph.traces) {
       const data = await this.dataService.getTraceData(trace).toPromise();
 
       if ((await treshold(data[0], data[1], tres))) {
-        remaining.push(trace);
+        remaining.push(trace.id);
       }
     }
 
-    this.selectedGraph.traces = remaining;
+    this.selectedTraces = remaining;
   }
 
   traceControl(action: TraceAction): void {
