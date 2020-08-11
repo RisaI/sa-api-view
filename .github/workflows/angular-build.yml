@@ -27,6 +27,7 @@ jobs:
     - uses: thedoctor0/zip-release@master
       with:
         filename: 'release.zip'
+        directory: './dist/sa-api-view/'
         path: './dist/sa-api-view/'
     - uses: actions/upload-artifact@v2
       with:
