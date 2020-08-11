@@ -27,4 +27,5 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "dist/sa-api-view/*"
+        tag: debug-release
         token: ${{ secrets.GITHUB_TOKEN }}
