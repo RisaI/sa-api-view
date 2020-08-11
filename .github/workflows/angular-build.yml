@@ -23,10 +23,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm run build --prod
-    - uses: montudor/action-zip@v0.1.0
+    - run: npm run buildprod
+    - uses: thedoctor0/zip-release@master
       with:
-        args: zip -qq -r ./release.zip ./dist/sa-api-view/*
+        filename: 'release.zip'
+        path: './dist/sa-api-view/'
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "./release.zip"
