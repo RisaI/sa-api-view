@@ -3,6 +3,7 @@
     <div *ngIf="graph.traces.length <= 0; else content">Graf nemá žádné křivky</div>
     <ng-template #content>
         <plotly-plot
+            divId="graph-{{graph.id}}"
             [data]="loadedData"
             [config]="{
                 responsive: true,
@@ -18,6 +19,11 @@
                 width: graphWidth,
                 height: graphHeight
             }"
+
+            (initialized)="bindInstance($event)"
+            (afterPlot)="onUpdate()"
         ></plotly-plot>
+        <!-- width: graphWidth,
+        height: graphHeight -->
     </ng-template>
 </div>

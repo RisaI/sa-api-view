@@ -55,3 +55,4 @@
 </div>
 
 <app-trace-import-modal [show]="traceImportOpen" [usedIds]="selectedGraphTraceIds()" (toggle)="traceImportOpen = false" (import)="importTrace($event)"></app-trace-import-modal>
+<app-treshold-modal [show]="tresholdOpen" (toggle)="tresholdOpen = false" (treshold)="filterTreshold($event)"></app-treshold-modal>

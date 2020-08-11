@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { shareReplay, first, map } from 'rxjs/operators';
+import { Observable, zip } from 'rxjs';
+import { shareReplay, first, map, merge } from 'rxjs/operators';
 
 const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
 
@@ -11,6 +11,7 @@ const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
 export class DataService {
 
   private sources: Observable<DataSource[]> | undefined = undefined;
+  private dataCache: { [hash: string]: Observable<[Dataset, ArrayBuffer]> } = {};
 
   constructor(private http: HttpClient) { }
 
@@ -26,8 +27,8 @@ export class DataService {
 
   getDataset(source: string, dataset: string): Observable<Dataset> {
     return this.getSources().pipe(
-      first(),
-      map(sources => sources.find(s => s.id === source).datasets.find(d => d.id === dataset))
+      map(sources => sources.find(s => s.id === source).datasets.find(d => d.id === dataset)),
+      first()
     );
   }
 
@@ -54,5 +55,28 @@ export class DataService {
       getApiPath('data', ...(typeof id === 'string' ? [ source as string, id ] : [ id.source, id.id ]), 'data') + query,
       { responseType: 'arraybuffer' }
     );
+  }
+
+  getTraceData(trace: Trace): Observable<[Dataset, ArrayBuffer]> {
+    const hash = this.getTraceHash(trace);
+
+    if (!this.dataCache[hash]) {
+      this.dataCache[hash] = zip(
+          this.getDataset(trace.sourceId, trace.datasetId),
+          this.getDataSetData(
+            trace.datasetId,
+            trace.sourceId,
+            trace.variant,
+            trace.xRange && trace.xRange[0],
+            trace.xRange && trace.xRange[1]
+          ).pipe(shareReplay(1))
+        );
+    }
+
+    return this.dataCache[hash];
+  }
+
+  getTraceHash(trace: Trace): string {
+    return `${trace.sourceId}:${trace.datasetId}:${trace.variant || ''}:${trace.xRange && trace.xRange[0]}:${trace.xRange && trace.xRange[1]}`;
   }
 }

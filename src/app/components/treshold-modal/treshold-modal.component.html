@@ -1,0 +1,24 @@
+<div class="modal" tabindex="-1" role="dialog" [class.show]="show">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="toggle.emit()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Treshold</h4>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Minimální hodnota:</label>
+            <input class="form-control" type="text" name="value" [(ngModel)]="value">
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="toggle.emit()">Zrušit</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()">Importovat</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { ControlsService } from './services/controls.service';
+import { isZero, treshold } from './services/deserialization';
+import { DataService } from './services/data.service';
+import { of, forkJoin, combineLatest, merge } from 'rxjs';
+import { filter, map, combineAll } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -6,14 +11,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'sa-api-view';
 
   horizontal = false;
   traceImportOpen = false;
+  tresholdOpen = false;
 
   graphs: Graph[] = [];
   selectedGraph?: Graph = undefined;
   selectedTraces: Trace['id'][] = [];
+
+  constructor(private controlsService: ControlsService, private dataService: DataService) {
+
+  }
 
   onChangeOrientation(): void {
     this.horizontal = !this.horizontal;
@@ -82,13 +91,57 @@ export class AppComponent {
     }
   }
 
+  async filterZero(): Promise<void> {
+    const remaining: Trace[] = [];
+
+    for (const trace of this.selectedGraph.traces) {
+      const data = await this.dataService.getTraceData(trace).toPromise();
+
+      if (!(await isZero(data[0], data[1]))) {
+        remaining.push(trace);
+      }
+    }
+
+    this.selectedGraph.traces = remaining;
+  }
+
+  async filterTreshold(tres: number): Promise<void> {
+    const remaining: Trace[] = [];
+
+    for (const trace of this.selectedGraph.traces) {
+      const data = await this.dataService.getTraceData(trace).toPromise();
+
+      if ((await treshold(data[0], data[1], tres))) {
+        remaining.push(trace);
+      }
+    }
+
+    this.selectedGraph.traces = remaining;
+  }
+
   traceControl(action: TraceAction): void {
     switch (action) {
       case 'sel-all':
         this.selectedTraces = this.selectedGraph.traces.map(t => t.id);
         break;
       case 'sel-unq':
-        // TODO:
+        const hashes = this.selectedGraph.traces.map(t => this.dataService.getTraceHash(t));
+        const newSel: string[] = [];
+        for (let a = hashes.length - 1; a >= 0; --a) {
+          let occured = false;
+
+          for (let b = 0; b < a; ++b) {
+            if (hashes[b] === hashes[a]) {
+              occured = true;
+              break;
+            }
+          }
+
+          if (!occured) {
+            newSel.push(this.selectedGraph.traces[a].id);
+          }
+        }
+        this.selectedTraces = newSel;
         break;
       case 'des':
         this.selectedTraces = [];
@@ -97,11 +150,13 @@ export class AppComponent {
         this.selectedTraces = this.selectedGraph.traces.map(t => t.id).filter(t => this.selectedTraces.indexOf(t) < 0);
         break;
       case 'tres':
-        // TODO:
+        this.tresholdOpen = true;
         break;
 
       case 'del-zero':
-        // TODO:
+        this.filterZero().then(() => {
+          this.selectedTraces = [];
+        });
         break;
       case 'del-sel':
         this.selectedGraph.traces = this.selectedGraph.traces.filter(t => this.selectedTraces.indexOf(t.id) < 0);
@@ -109,7 +164,13 @@ export class AppComponent {
         break;
       case 'del-unsel':
         this.selectedGraph.traces = this.selectedGraph.traces.filter(t => this.selectedTraces.indexOf(t.id) >= 0);
-        this.selectedTraces = [];
+        break;
+
+
+      case 'zoom-sync':
+        if (this.selectedGraph.zoom) {
+          this.controlsService.performZoomSync(this.selectedGraph.zoom);
+        }
         break;
     }
   }

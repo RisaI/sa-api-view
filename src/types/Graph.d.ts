@@ -1,15 +1,18 @@
 interface Graph {
     id: number;
+
+    // Appearance
     title: string;
     xLabel: string;
     yLabel: string;
-
-    xType?: string;
-    xRange?: [ any, any ];
-
     margin?: 0 | 1 | 2 | 3;
 
+    // Functionality
+    xType?: string;
     traces: Trace[];
+
+    // Runtime
+    zoom?: [ [Date, Date], [any, any] ];
 }
 
 interface Trace {

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
+import { parseTimestamp, dateToTimestamp } from 'src/app/services/deserialization';
 
 @Component({
   selector: 'app-trace-import-modal',
@@ -46,7 +47,7 @@ export class TraceImportModalComponent implements OnInit {
       datasetId: this.selectedTrace.id,
       variant: this.selectedVariant,
 
-      xRange: this.timeRange.map(d => Math.floor(d.getTime() / 1000)) as [number, number]
+      xRange: this.timeRange.map(dateToTimestamp) as [number, number]
     });
   }
 
@@ -79,6 +80,6 @@ export class TraceImportModalComponent implements OnInit {
   hasVariants = () => this.selectedTrace?.variants?.length > 0;
   getAvailableVariants = () => this.hasVariants() ? this.selectedTrace.variants : [ 'žádné' ];
 
-  getMinDate = () => new Date(this.selectedTrace.availableXRange[0] * 1000);
-  getMaxDate = () => new Date(this.selectedTrace.availableXRange[1] * 1000);
+  getMinDate = () => parseTimestamp(this.selectedTrace.availableXRange[0]);
+  getMaxDate = () => parseTimestamp(this.selectedTrace.availableXRange[1]);
 }

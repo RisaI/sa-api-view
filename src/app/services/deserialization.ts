@@ -12,7 +12,7 @@ const deserializers: { [key: string]: { size: number, parser: (view: DataView, p
     // double:   { size: 8, parser: (view, pos) => view.getFloat64(pos, true) },
 };
 
-export async function deserialize(set: Dataset, stream: ArrayBuffer): Promise<{x: any[], y: any[]}> {
+export async function deserializePlotly(set: Dataset, stream: ArrayBuffer): Promise<{x: any[], y: any[]}> {
     const xD = deserializers[set.xType];
     const yD = deserializers[set.yType];
 
@@ -40,3 +40,46 @@ export async function deserialize(set: Dataset, stream: ArrayBuffer): Promise<{x
 
     return result;
 }
+
+export async function isZero(set: Dataset, stream: ArrayBuffer): Promise<boolean> {
+    const xSize = deserializers[set.xType].size;
+    const yD = deserializers[set.yType];
+
+    if (!yD) {
+        throw new Error(`Cannot deserialize type '${set.yType}'`);
+    }
+
+    const view = new DataView(stream);
+    for (let i = 0; i < stream.byteLength;) {
+        i += xSize;
+        if (yD.parser(view, i) !== 0) {
+            return false;
+        }
+        i += yD.size;
+    }
+
+    return true;
+}
+
+export async function treshold(set: Dataset, stream: ArrayBuffer, tres: number): Promise<boolean> {
+    const xSize = deserializers[set.xType].size;
+    const yD = deserializers[set.yType];
+
+    if (!yD) {
+        throw new Error(`Cannot deserialize type '${set.yType}'`);
+    }
+
+    const view = new DataView(stream);
+    for (let i = 0; i < stream.byteLength;) {
+        i += xSize;
+        if (yD.parser(view, i) > tres) {
+            return true;
+        }
+        i += yD.size;
+    }
+
+    return false;
+}
+
+export const parseTimestamp = (stamp: number) => new Date(stamp * 1000);
+export const dateToTimestamp = (date: Date) => Math.floor(date.getTime() / 1000);
