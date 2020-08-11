@@ -32,4 +32,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: release
-        path: ./release.zip
+        path: ./dist/sa-api-view/release.zip
