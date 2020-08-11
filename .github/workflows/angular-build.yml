@@ -28,8 +28,7 @@ jobs:
       with:
         filename: 'release.zip'
         path: './dist/sa-api-view/'
-    - uses: ncipollo/release-action@v1
+    - uses: actions/upload-artifact@v2
       with:
-        artifacts: "./release.zip"
-        tag: debug-release
-        token: ${{ secrets.GITHUB_TOKEN }}
+        name: release
+        path: ./release.zip
