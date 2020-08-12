@@ -5,7 +5,8 @@ name: Angular build
 
 on:
   push:
-    branches: [ master ]
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -24,12 +25,21 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run buildprod
-    - uses: thedoctor0/zip-release@master
+    - run: zip -r release.zip -j dist/sa-api-view/
+    - uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        filename: 'release.zip'
-        directory: './dist/sa-api-view/'
-        path: '.'
-    - uses: actions/upload-artifact@v2
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: release
-        path: ./dist/sa-api-view/release.zip
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release.zip
+        asset_name: release.zip
+        asset_content_type: application/zip
