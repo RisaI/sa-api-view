@@ -9,16 +9,18 @@
   <ng-container *ngIf="selectedGraph !== undefined; else noGraph">
     <div>
       <a
-        class="nav-btn ion-arrow-up-c"
+        class="nav-btn"
         [class.active]="canMoveUp()"
         (click)="canMoveUp() && moveUp()"
-      ></a>
+      ><fa-icon [icon]="faUp"></fa-icon></a>
       <a
-        class="nav-btn ion-arrow-down-c"
+        class="nav-btn"
         [class.active]="canMoveDown()"
         (click)="canMoveDown() && moveDown()"
-      ></a>
-      <a class="nav-btn active ion-trash-b" (click)="removeGraph()"></a>
+      ><fa-icon [icon]="faDown"></fa-icon></a>
+      <a class="nav-btn active" (click)="removeGraph()">
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </a>
     </div>
     <ul class="sidebar-menu"><li class="header">VLASTNOSTI</li></ul>
     <form style="color: white">
@@ -26,7 +28,12 @@
       <div class="form-group"><label>Osa x:</label><input class="form-control" type="text" value="{{selectedGraph.xLabel}}" (change)="selectedGraph.xLabel = $event.target.value"></div>
       <div class="form-group"><label>Osa y:</label><input class="form-control" type="text" value="{{selectedGraph.yLabel}}" (change)="selectedGraph.yLabel = $event.target.value"></div>
     </form>
-    <ul class="sidebar-menu"><li class="header" style="display: flex; align-items: center;">KŘIVKY<span class="btn btn-menu ion-android-add active" (click)="traceImportOpen = true"></span></li></ul>
+    <ul class="sidebar-menu">
+      <li class="header" style="display: flex; align-items: center;">
+        KŘIVKY
+        <span class="btn btn-menu active" (click)="traceImportOpen = true"><fa-icon [icon]="faAdd"></fa-icon></span>
+      </li>
+    </ul>
     <app-trace-controls (action)="traceControl($event)"></app-trace-controls>
     <app-trace-list
       [traces]="selectedGraph.traces"

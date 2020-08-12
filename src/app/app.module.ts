@@ -12,17 +12,18 @@ import { TraceControlsComponent } from './components/trace-controls/trace-contro
 import { TraceListComponent } from './components/trace-list/trace-list.component';
 import { GraphViewComponent } from './components/graph-view/graph-view.component';
 import { TraceImportModalComponent } from './components/trace-import-modal/trace-import-modal.component';
+import { TresholdModalComponent } from './components/treshold-modal/treshold-modal.component';
 
 import { DataService } from './services/data.service';
 import { ControlsService } from './services/controls.service';
 
-import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
+// import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { SizeMeModule } from 'ngx-size-me';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { TresholdModalComponent } from './components/treshold-modal/treshold-modal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-PlotlyModule.plotlyjs = PlotlyJS;
+// PlotlyViwModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -40,10 +41,11 @@ PlotlyModule.plotlyjs = PlotlyJS;
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    PlotlyModule,
+    PlotlyViaWindowModule,
     SizeMeModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    FontAwesomeModule,
   ],
   providers: [
     DataService,

@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { ControlsService } from './services/controls.service';
 import { isZero, treshold } from './services/deserialization';
 import { DataService } from './services/data.service';
-import { of, forkJoin, combineLatest, merge } from 'rxjs';
-import { filter, map, combineAll } from 'rxjs/operators';
+import { faArrowUp, faArrowDown, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +10,11 @@ import { filter, map, combineAll } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  faUp = faArrowUp;
+  faDown = faArrowDown;
+  faTrash = faTrash;
+  faAdd = faPlus;
 
   horizontal = false;
   traceImportOpen = false;
