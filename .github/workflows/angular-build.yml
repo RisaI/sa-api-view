@@ -25,9 +25,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run buildprod
-    - run: cd dist/sa-api-view/
-    - run: zip -r ../../release.zip .
-    - run: cd ../../
+    - name: Create the release.zip file
+      run: zip -r ../../release.zip .
+      working-directory: dist/sa-api-view/
     - uses: actions/create-release@v1
       id: create_release
       env:
