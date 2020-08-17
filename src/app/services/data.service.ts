@@ -35,24 +35,13 @@ export class DataService {
   getDataSetData(id: Dataset | string, source?: string, variant?: string, from?: any, to?: any): Observable<ArrayBuffer> {
     let query = '';
 
-    if (from !== undefined && to !== undefined) {
-        query = `?from=${from}&to=${to}`;
-    } else if (from !== undefined) {
-        query = `?from=${from}`;
-    } else if (to !== undefined) {
-        query = `?to=${to}`;
-    }
-
     if (variant) {
-        if (query === '') {
-            query = `?variant=${variant}`;
-        } else {
-            query += `&variant=${variant}`;
-        }
+      query = `?variant=${variant}`;
     }
 
-    return this.http.get(
-      getApiPath('data', ...(typeof id === 'string' ? [ source as string, id ] : [ id.source, id.id ]), 'data') + query,
+    return this.http.post(
+      getApiPath('data', ...(typeof id === 'string' ? [ source as string, id ] : [ id.source, id.id ])) + query,
+      { from: JSON.stringify(from), to: JSON.stringify(to) },
       { responseType: 'arraybuffer' }
     );
   }
