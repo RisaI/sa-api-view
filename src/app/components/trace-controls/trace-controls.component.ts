@@ -11,12 +11,29 @@ export class TraceControlsComponent implements OnInit {
 
   // TODO: make this static
   buttons: { label: string, action: TraceAction }[][] = [
-    // tslint:disable-next-line: max-line-length
-    [ { label: 'SelUnq', action: 'sel-unq' }, { label: 'SelAll', action: 'sel-all' }, { label: 'Inv', action: 'inv' }, { label: 'Des', action: 'des' }, { label: 'Tres', action: 'tres' } ],
-    // tslint:disable-next-line: max-line-length
-    [ { label: 'Sort', action: 'sort' }, { label: 'Filter', action: 'filter' }, { label: 'Search', action: 'search' }, { label: 'Sum', action: 'sum' }, { label: 'Avg', action: 'avg' } ],
-    [ { label: 'DelZero', action: 'del-zero' }, { label: 'DelSel', action: 'del-sel' }, { label: 'DelUnsel', action: 'del-unsel' } ],
-    [ { label: 'NameS', action: 'name-sync' }, { label: 'BindS', action: 'bind-sync' }, { label: 'ZoomS', action: 'zoom-sync' } ],
+    [
+      { label: 'Filtering', action: 'filter' },
+      { label: 'SelUniq', action: 'sel-unq' },
+      { label: 'Search', action: 'search' },
+      { label: 'Thres', action: 'tres' }
+    ],
+    [
+      { label: 'AllSel', action: 'sel-all' },
+      { label: 'InvSel', action: 'inv' },
+      { label: 'DeSel', action: 'des' },
+      { label: 'DelZero', action: 'del-zero' }
+    ],
+    [
+      { label: 'Sum', action: 'sum' },
+      { label: 'Average', action: 'avg' },
+      { label: 'DelUnsel', action: 'del-unsel' },
+      { label: 'Sort', action: 'sort' } ],
+    [
+      { label: 'Name Sync', action: 'name-sync' },
+      { label: 'Bind Sync', action: 'bind-sync' },
+      { label: 'Zoom Sync', action: 'zoom-sync' }
+    ],
+    // { label: 'DelSel', action: 'del-sel' },
   ];
 
   constructor() { }

@@ -125,9 +125,7 @@ export class AppComponent {
 
   traceControl(action: TraceAction): void {
     switch (action) {
-      case 'sel-all':
-        this.selectedTraces = this.selectedGraph.traces.map(t => t.id);
-        break;
+      // TODO: filtering
       case 'sel-unq':
         const hashes = this.selectedGraph.traces.map(t => this.dataService.getTraceHash(t));
         const newSel: string[] = [];
@@ -147,30 +145,40 @@ export class AppComponent {
         }
         this.selectedTraces = newSel;
         break;
-      case 'des':
-        this.selectedTraces = [];
-        break;
-      case 'inv':
-        this.selectedTraces = this.selectedGraph.traces.map(t => t.id).filter(t => this.selectedTraces.indexOf(t) < 0);
-        break;
+      // TODO: search
       case 'tres':
         this.tresholdOpen = true;
         break;
 
+
+      case 'sel-all':
+        this.selectedTraces = this.selectedGraph.traces.map(t => t.id);
+        break;
+      case 'inv':
+        this.selectedTraces = this.selectedGraph.traces.map(t => t.id).filter(t => this.selectedTraces.indexOf(t) < 0);
+        break;
+      case 'des':
+        this.selectedTraces = [];
+        break;
       case 'del-zero':
         this.filterZero().then(() => {
           this.selectedTraces = [];
         });
         break;
-      case 'del-sel':
-        this.selectedGraph.traces = this.selectedGraph.traces.filter(t => this.selectedTraces.indexOf(t.id) < 0);
-        this.selectedTraces = [];
-        break;
+
+      // case 'del-sel':
+      //   this.selectedGraph.traces = this.selectedGraph.traces.filter(t => this.selectedTraces.indexOf(t.id) < 0);
+      //   this.selectedTraces = [];
+      //   break;
+      // TODO: Sum
+      // TODO: Average
       case 'del-unsel':
         this.selectedGraph.traces = this.selectedGraph.traces.filter(t => this.selectedTraces.indexOf(t.id) >= 0);
         break;
+      // TODO: Sort
 
-
+      // TODO: Name Sync
+      // TODO: Bind Sync
       case 'zoom-sync':
         if (this.selectedGraph.zoom) {
           this.controlsService.performZoomSync(this.selectedGraph.zoom);
