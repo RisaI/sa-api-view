@@ -12,7 +12,7 @@ const deserializers: { [key: string]: { size: number, parser: (view: DataView, p
     // double:   { size: 8, parser: (view, pos) => view.getFloat64(pos, true) },
 };
 
-export async function deserializePlotly(set: Dataset, stream: ArrayBuffer): Promise<{x: any[], y: any[]}> {
+export async function deserializePlotly(set: PipelineSpecs, stream: ArrayBuffer): Promise<{x: any[], y: any[]}> {
     const xD = deserializers[set.xType];
     const yD = deserializers[set.yType];
 
@@ -41,7 +41,7 @@ export async function deserializePlotly(set: Dataset, stream: ArrayBuffer): Prom
     return result;
 }
 
-export async function isZero(set: Dataset, stream: ArrayBuffer): Promise<boolean> {
+export async function isZero(set: PipelineSpecs, stream: ArrayBuffer): Promise<boolean> {
     const xSize = deserializers[set.xType].size;
     const yD = deserializers[set.yType];
 
@@ -61,7 +61,7 @@ export async function isZero(set: Dataset, stream: ArrayBuffer): Promise<boolean
     return true;
 }
 
-export async function treshold(set: Dataset, stream: ArrayBuffer, tres: number): Promise<boolean> {
+export async function treshold(set: PipelineSpecs, stream: ArrayBuffer, tres: number): Promise<boolean> {
     const xSize = deserializers[set.xType].size;
     const yD = deserializers[set.yType];
 

@@ -37,8 +37,8 @@ export class GraphViewComponent implements OnInit, OnChanges {
   }
 
   loadTrace(trace: Trace): void {
-    this.dataService.getTraceData(trace).subscribe(([dataset, data]) => {
-      deserializePlotly(dataset, data).then(des => {
+    this.dataService.getTraceData(trace).subscribe(([specs, data]) => {
+      deserializePlotly(specs, data).then(des => {
         const idx = this.loadedData.findIndex(d => d.id === trace.id);
 
         if (idx >= 0) {

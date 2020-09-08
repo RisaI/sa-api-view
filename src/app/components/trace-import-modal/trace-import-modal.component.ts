@@ -43,9 +43,14 @@ export class TraceImportModalComponent implements OnInit {
       id: this.id,
       title: this.title,
 
-      sourceId: this.selectedSource.id,
-      datasetId: this.selectedTrace.id,
-      variant: this.selectedVariant,
+      pipeline: {
+        type: 'data',
+        dataset: {
+          source: this.selectedSource.id,
+          id: this.selectedTrace.id,
+          variant: this.selectedVariant,
+        }
+      },
 
       xRange: this.timeRange.map(dateToTimestamp) as [number, number]
     });

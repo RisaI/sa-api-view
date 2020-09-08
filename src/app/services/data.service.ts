@@ -12,7 +12,7 @@ const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
 export class DataService {
 
   private sources: Observable<DataSource[]> | undefined = undefined;
-  private dataCache: { [hash: string]: Observable<[Dataset, ArrayBuffer]> } = {};
+  private dataCache: { [hash: string]: Observable<[PipelineSpecs, ArrayBuffer]> } = {};
 
   constructor(private http: HttpClient) { }
 
@@ -26,10 +26,10 @@ export class DataService {
     );
   }
 
-  getDataset(source: string, dataset: string): Observable<Dataset> {
-    return this.getSources().pipe(
-      map(sources => sources.find(s => s.id === source).datasets.find(d => d.id === dataset)),
-      first()
+  getPipelineSpecs(pipeline: PipelineRequest): Observable<PipelineSpecs> {
+    return this.http.post<PipelineSpecs>(
+      getApiPath('data', 'specs'),
+      pipeline
     );
   }
 
@@ -41,16 +41,16 @@ export class DataService {
     );
   }
 
-  getTraceData(trace: Trace): Observable<[Dataset, ArrayBuffer]> {
+  getTraceData(trace: Trace): Observable<[PipelineSpecs, ArrayBuffer]> {
     const hash = this.getTraceHash(trace);
 
     if (!this.dataCache[hash]) {
       this.dataCache[hash] = zip(
-          this.getDataset(trace.sourceId, trace.datasetId),
+          this.getPipelineSpecs({ pipeline: trace.pipeline } as PipelineRequest),
           this.getPipelineData(
             {
-              from: trace.xRange && trace.xRange[0],
-              to: trace.xRange && trace.xRange[1],
+              from: trace.xRange && String(trace.xRange[0]),
+              to: trace.xRange && String(trace.xRange[1]),
               pipeline: trace.pipeline
             }
           ).pipe(shareReplay(1))
