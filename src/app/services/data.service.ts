@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, zip } from 'rxjs';
 import { shareReplay, first, map, merge } from 'rxjs/operators';
+import {Md5} from 'ts-md5/dist/md5';
 
 const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
 
@@ -32,16 +33,10 @@ export class DataService {
     );
   }
 
-  getDataSetData(id: Dataset | string, source?: string, variant?: string, from?: any, to?: any): Observable<ArrayBuffer> {
-    let query = '';
-
-    if (variant) {
-      query = `?variant=${variant}`;
-    }
-
+  getPipelineData(pipeline: PipelineRequest): Observable<ArrayBuffer> {
     return this.http.post(
-      getApiPath('data', ...(typeof id === 'string' ? [ source as string, id ] : [ id.source, id.id ])) + query,
-      { from: JSON.stringify(from), to: JSON.stringify(to) },
+      getApiPath('data'),
+      pipeline,
       { responseType: 'arraybuffer' }
     );
   }
@@ -52,12 +47,12 @@ export class DataService {
     if (!this.dataCache[hash]) {
       this.dataCache[hash] = zip(
           this.getDataset(trace.sourceId, trace.datasetId),
-          this.getDataSetData(
-            trace.datasetId,
-            trace.sourceId,
-            trace.variant,
-            trace.xRange && trace.xRange[0],
-            trace.xRange && trace.xRange[1]
+          this.getPipelineData(
+            {
+              from: trace.xRange && trace.xRange[0],
+              to: trace.xRange && trace.xRange[1],
+              pipeline: trace.pipeline
+            }
           ).pipe(shareReplay(1))
         );
     }
@@ -66,6 +61,6 @@ export class DataService {
   }
 
   getTraceHash(trace: Trace): string {
-    return `${trace.sourceId}:${trace.datasetId}:${trace.variant || ''}:${trace.xRange && trace.xRange[0]}:${trace.xRange && trace.xRange[1]}`;
+    return Md5.hashStr(JSON.stringify(trace.pipeline), false) as string;
   }
 }

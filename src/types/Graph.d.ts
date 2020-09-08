@@ -19,10 +19,7 @@ interface Trace {
     id: string;
     title: string;
     
-    sourceId: string;
-    datasetId: string;
-    variant?: string;
-    
+    pipeline: NodeDescriptor;
     xRange?: [ any, any ];
 }
 
