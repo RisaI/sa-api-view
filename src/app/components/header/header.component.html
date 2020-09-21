@@ -9,7 +9,7 @@
     <div class="collapse navbar-collapse show">
       <ul ngbNav class="nav ml-auto">
         <ng-content></ng-content>
-        <li ngbNavItem><a class="nav-link" href="#" (click)="changeOrientation.emit()">Prohodit orientaci</a></li>
+        <li ngbNavItem><a class="nav-link" href="#" (click)="toggleLock.emit()">Toggle lock</a></li>
         <li ngbNavItem><a class="nav-link" href="#" (click)="addGraph.emit()">Přidat graf</a></li>
       </ul>
     </div>

@@ -4,6 +4,7 @@ import { deserializePlotly, parseTimestamp } from '../../services/deserializatio
 import { PlotlyService } from 'angular-plotly.js';
 import { Plotly } from 'angular-plotly.js/src/app/shared/plotly.interface';
 import { ControlsService } from 'src/app/services/controls.service';
+import { GridsterConfig } from 'angular-gridster2';
 
 @Component({
   selector: 'app-graph-view',
@@ -83,6 +84,8 @@ export class GraphViewComponent implements OnInit, OnChanges {
   changeExtent(width: number, height: number): void {
     this.graphWidth = width;
     this.graphHeight = height;
+
+    ++this.revision;
   }
   bindInstance(instance: any): void {
     this.plotlyInstance = instance;

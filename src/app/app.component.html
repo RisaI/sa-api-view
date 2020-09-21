@@ -1,5 +1,6 @@
 <app-header
-  (changeOrientation)="onChangeOrientation()"
+  [layoutUnlocked]="layoutUnlocked"
+  (toggleLock)="onToggleLock()"
   (addGraph)="onAddGraph()"
 ></app-header>
 
@@ -50,15 +51,30 @@
 <!-- TODO: Spinner -->
 
 <div class="content-wrapper">
-  <section class="container-fluid container-graphs" [class.horizontal]="horizontal">
-    <app-graph-view
-      *ngFor="let graph of graphs"
-      [graph]="graph"
-      [traces]="graph.traces"
-      [class.active]="selectedGraph === graph"
-      (click)="selectedGraph = graph; selectedTraces = []">
-    </app-graph-view>
-  </section>
+    <gridster
+      class="container-fluid"
+      [options]="{
+        minCols: 12,
+        maxCols: 12,
+        draggable: {
+          enabled: layoutUnlocked
+        },
+        resizable: {
+          enabled: layoutUnlocked
+        },
+        pushItems: true,
+        compactType: 'compactLeft&Up'
+      }"
+    >
+      <gridster-item class="d-flex" *ngFor="let graph of graphs" [item]="graph">
+        <app-graph-view
+          [graph]="graph"
+          [traces]="graph.traces"
+          [class.active]="selectedGraph === graph"
+          (click)="selectedGraph = graph; selectedTraces = []">
+        </app-graph-view>
+      </gridster-item>
+    </gridster>
 </div>
 
 <app-trace-import-modal [show]="traceImportOpen" [usedIds]="selectedGraphTraceIds()" (toggle)="traceImportOpen = false" (import)="importTraces($event)"></app-trace-import-modal>

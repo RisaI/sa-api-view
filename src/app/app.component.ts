@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { ControlsService } from './services/controls.service';
 import { isZero, treshold } from './services/deserialization';
 import { DataService } from './services/data.service';
 import { faArrowUp, faArrowDown, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { GridsterItem } from 'angular-gridster2';
 
 @Component({
   selector: 'app-root',
@@ -16,20 +17,20 @@ export class AppComponent {
   faTrash = faTrash;
   faAdd = faPlus;
 
-  horizontal = false;
+  layoutUnlocked = false;
   traceImportOpen = false;
   tresholdOpen = false;
 
-  graphs: Graph[] = [];
-  selectedGraph?: Graph = undefined;
+  graphs: (Graph & GridsterItem)[] = [];
+  selectedGraph?: (Graph & GridsterItem) = undefined;
   selectedTraces: Trace['id'][] = [];
 
   constructor(private controlsService: ControlsService, private dataService: DataService) {
 
   }
 
-  onChangeOrientation(): void {
-    this.horizontal = !this.horizontal;
+  onToggleLock = () => {
+    this.layoutUnlocked = !this.layoutUnlocked;
   }
 
   onAddGraph(): void {
@@ -41,6 +42,11 @@ export class AppComponent {
       xLabel: 'osa x',
       yLabel: 'osa y',
       traces: [ ],
+
+      x: 0,
+      y: 0,
+      rows: 3,
+      cols: 6,
     } ];
   }
 

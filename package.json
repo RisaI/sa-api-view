@@ -27,6 +27,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
+    "angular-gridster2": "^10.1.5",
     "angular-plotly.js": "^2.0.0",
     "bootstrap": "^4.5.2",
     "moment": "^2.27.0",

@@ -24,6 +24,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TreeviewModule } from 'ngx-treeview';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { GridsterModule } from 'angular-gridster2';
 
 // PlotlyViwModule.plotlyjs = PlotlyJS;
 
@@ -50,6 +51,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FontAwesomeModule,
     TreeviewModule.forRoot(),
     NgbModule,
+    GridsterModule,
   ],
   providers: [
     DataService,
