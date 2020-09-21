@@ -23,6 +23,8 @@ export class GraphViewComponent implements OnInit, OnChanges {
   loadedData: any[] = [];
   graphWidth = 0;
   graphHeight = 0;
+  revision = 0;
+  loading: Trace[] = [];
 
   private plotlyDiv: Plotly.PlotlyHTMLElement;
   private plotlyInstance: Plotly.Figure;
@@ -37,6 +39,7 @@ export class GraphViewComponent implements OnInit, OnChanges {
   }
 
   loadTrace(trace: Trace): void {
+    this.loading.push(trace);
     this.dataService.getTraceData(trace).subscribe(([specs, data]) => {
       deserializePlotly(specs, data).then(des => {
         const idx = this.loadedData.findIndex(d => d.id === trace.id);
@@ -52,7 +55,12 @@ export class GraphViewComponent implements OnInit, OnChanges {
             ...des,
           } ];
         }
-      })
+
+        this.loading.splice(this.loading.indexOf(trace), 1);
+        if (this.loading.length <= 0) {
+          ++this.revision;
+        }
+      });
     });
   }
 

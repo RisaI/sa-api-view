@@ -4,6 +4,7 @@
     <ng-template #content>
         <plotly-plot
             divId="graph-{{graph.id}}"
+            [updateOnlyWithRevision]="true"
             [data]="loadedData"
             [config]="{
                 responsive: true,
@@ -19,6 +20,7 @@
                 width: graphWidth,
                 height: graphHeight
             }"
+            [revision]="revision"
 
             (initialized)="bindInstance($event)"
             (afterPlot)="onUpdate()"
