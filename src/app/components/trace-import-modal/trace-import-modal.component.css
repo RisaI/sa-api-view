@@ -1,16 +1,5 @@
 .modal.show {
     display: block;
     z-index: 900;
-}
-
-.import-form {
-    display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-}
-
-.import-form > .col {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    flex: 1;
+    margin-top: 32px;
 }

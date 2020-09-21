@@ -22,6 +22,8 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { SizeMeModule } from 'ngx-size-me';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TreeviewModule } from 'ngx-treeview';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // PlotlyViwModule.plotlyjs = PlotlyJS;
 
@@ -46,6 +48,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     FontAwesomeModule,
+    TreeviewModule.forRoot(),
+    NgbModule,
   ],
   providers: [
     DataService,

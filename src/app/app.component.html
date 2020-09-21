@@ -31,7 +31,7 @@
     <ul class="sidebar-menu">
       <li class="header" style="display: flex; align-items: center;">
         KŘIVKY
-        <span class="btn btn-menu active" (click)="traceImportOpen = true"><fa-icon [icon]="faAdd"></fa-icon></span>
+        <span class="btn btn-menu active text-secondary" (click)="traceImportOpen = true"><fa-icon [icon]="faAdd"></fa-icon></span>
       </li>
     </ul>
     <app-trace-controls (action)="traceControl($event)"></app-trace-controls>
@@ -61,5 +61,5 @@
   </section>
 </div>
 
-<app-trace-import-modal [show]="traceImportOpen" [usedIds]="selectedGraphTraceIds()" (toggle)="traceImportOpen = false" (import)="importTrace($event)"></app-trace-import-modal>
+<app-trace-import-modal [show]="traceImportOpen" [usedIds]="selectedGraphTraceIds()" (toggle)="traceImportOpen = false" (import)="importTraces($event)"></app-trace-import-modal>
 <app-treshold-modal [show]="tresholdOpen" (toggle)="tresholdOpen = false" (treshold)="filterTreshold($event)"></app-treshold-modal>

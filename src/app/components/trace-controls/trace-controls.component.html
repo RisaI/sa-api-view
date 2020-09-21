@@ -1,5 +1,5 @@
 <div>
     <div *ngFor="let row of buttons" class="btn-group btn-group-stretch">
-        <button *ngFor="let button of row" class="btn btn-sm" (click)="action.emit(button.action)">{{button.label}}</button>
+        <button ngbButton *ngFor="let button of row" class="btn btn-primary btn-sm" (click)="action.emit(button.action)">{{button.label}}</button>
     </div>
 </div>

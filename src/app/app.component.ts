@@ -83,8 +83,8 @@ export class AppComponent {
     }
   }
 
-  importTrace(trace: Trace): void {
-    this.selectedGraph.traces = [ ...this.selectedGraph.traces, trace ];
+  importTraces(traces: Trace[]): void {
+    this.selectedGraph.traces = [ ...this.selectedGraph.traces, ...traces ];
   }
 
   toggleTrace(id: string): void {
