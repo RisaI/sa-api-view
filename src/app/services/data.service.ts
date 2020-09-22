@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, zip } from 'rxjs';
-import { shareReplay, first, map, merge } from 'rxjs/operators';
 import {Md5} from 'ts-md5/dist/md5';
 
 const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
@@ -11,41 +9,39 @@ const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
 })
 export class DataService {
 
-  private sources: Observable<DataSource[]> | undefined = undefined;
-  private dataCache: { [hash: string]: Observable<[PipelineSpecs, ArrayBuffer]> } = {};
+  private sources: DataSource[] | undefined = undefined;
+  private dataCache: { [hash: string]: [PipelineSpecs, ArrayBuffer] } = {};
 
   constructor(private http: HttpClient) { }
 
-  getSources(): Observable<DataSource[]> {
+  async getSources(): Promise<DataSource[]> {
     if (this.sources) {
       return this.sources;
     }
 
-    return this.sources = this.http.get<DataSource[]>(getApiPath('data')).pipe(
-      shareReplay(1)
-    );
+    return this.sources = await this.http.get<DataSource[]>(getApiPath('data')).toPromise();
   }
 
-  getPipelineSpecs(pipeline: PipelineRequest): Observable<PipelineSpecs> {
-    return this.http.post<PipelineSpecs>(
+  async getPipelineSpecs(pipeline: PipelineRequest): Promise<PipelineSpecs> {
+    return await this.http.post<PipelineSpecs>(
       getApiPath('data', 'specs'),
       pipeline
-    );
+    ).toPromise();
   }
 
-  getPipelineData(pipeline: PipelineRequest): Observable<ArrayBuffer> {
-    return this.http.post(
+  async getPipelineData(pipeline: PipelineRequest): Promise<ArrayBuffer> {
+    return await this.http.post(
       getApiPath('data'),
       pipeline,
       { responseType: 'arraybuffer' }
-    );
+    ).toPromise();
   }
 
-  getTraceData(trace: Trace): Observable<[PipelineSpecs, ArrayBuffer]> {
+  async getTraceData(trace: Trace): Promise<[PipelineSpecs, ArrayBuffer, Trace]> {
     const hash = this.getTraceHash(trace);
 
     if (!this.dataCache[hash]) {
-      this.dataCache[hash] = zip(
+      this.dataCache[hash] = await Promise.all([
           this.getPipelineSpecs({ pipeline: trace.pipeline } as PipelineRequest),
           this.getPipelineData(
             {
@@ -53,11 +49,11 @@ export class DataService {
               to: trace.xRange && String(trace.xRange[1]),
               pipeline: trace.pipeline
             }
-          ).pipe(shareReplay(1))
-        );
+          )
+        ]);
     }
 
-    return this.dataCache[hash];
+    return [ ...this.dataCache[hash], trace ];
   }
 
   getTraceHash(trace: Trace): string {

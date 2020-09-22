@@ -33,7 +33,7 @@
     "moment": "^2.27.0",
     "ngx-size-me": "^9.0.6",
     "ngx-treeview": "^10.0.2",
-    "plotly.js-basic-dist": "^1.54.7",
+    "plotly.js-gl2d-dist": "^1.55.2",
     "rxjs": "~6.5.5",
     "ts-md5": "^1.2.7",
     "tslib": "^2.0.0",

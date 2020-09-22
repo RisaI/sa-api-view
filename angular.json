@@ -28,7 +28,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/plotly.js-basic-dist/plotly-basic.js"
+              "node_modules/plotly.js-gl2d-dist/plotly-gl2d.js"
             ]
           },
           "configurations": {

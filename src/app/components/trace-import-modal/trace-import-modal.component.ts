@@ -30,7 +30,7 @@ export class TraceImportModalComponent implements OnInit {
   constructor(private dataClient: DataService) { }
 
   ngOnInit(): void {
-    this.dataClient.getSources().subscribe((s) => {
+    this.dataClient.getSources().then((s) => {
       this.sources = s;
 
       this.items = s.map(source => new TreeviewItem({
@@ -78,6 +78,7 @@ export class TraceImportModalComponent implements OnInit {
 
   onImport(): void {
     this.selected.forEach(s => s.xRange = this.timeRange.map(dateToTimestamp) as [number, number]);
+    this.toggle.emit();
     this.import.emit(this.selected);
   }
 
