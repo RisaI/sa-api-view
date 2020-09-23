@@ -2,7 +2,7 @@ interface PipelineRequest {
     from: any,
     to: any,
 
-    pipeline: NodeDescriptor,
+    pipelines: NodeDescriptor[],
 }
 
 interface PipelineSpecs {

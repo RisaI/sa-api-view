@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Md5} from 'ts-md5/dist/md5';
+import { deserializers } from './deserialization';
 
 const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
 
@@ -22,38 +23,43 @@ export class DataService {
     return this.sources = await this.http.get<DataSource[]>(getApiPath('data')).toPromise();
   }
 
-  async getPipelineSpecs(pipeline: PipelineRequest): Promise<PipelineSpecs> {
-    return await this.http.post<PipelineSpecs>(
+  async getPipelineSpecs(pipeline: PipelineRequest): Promise<PipelineSpecs[]> {
+    return await this.http.post<PipelineSpecs[]>(
       getApiPath('data', 'specs'),
       pipeline
     ).toPromise();
   }
 
-  async getPipelineData(pipeline: PipelineRequest): Promise<ArrayBuffer> {
+  async getPipelineData(request: PipelineRequest): Promise<ArrayBuffer> {
     return await this.http.post(
       getApiPath('data'),
-      pipeline,
+      request,
       { responseType: 'arraybuffer' }
     ).toPromise();
   }
 
-  async getTraceData(trace: Trace): Promise<[PipelineSpecs, ArrayBuffer, Trace]> {
-    const hash = this.getTraceHash(trace);
+  async getTraceData(traces: Trace[]): Promise<[PipelineSpecs, ArrayBuffer, Trace][]> {
+    const specs = await this.getPipelineSpecs({ pipelines: traces.map(t => t.pipeline) } as PipelineRequest);
+    const data = await this.getPipelineData({
+      pipelines: traces.map(t => t.pipeline),
+      from: traces[0].xRange && String(traces[0].xRange[0]),
+      to: traces[0].xRange && String(traces[0].xRange[1]),
+    });
 
-    if (!this.dataCache[hash]) {
-      this.dataCache[hash] = await Promise.all([
-          this.getPipelineSpecs({ pipeline: trace.pipeline } as PipelineRequest),
-          this.getPipelineData(
-            {
-              from: trace.xRange && String(trace.xRange[0]),
-              to: trace.xRange && String(trace.xRange[1]),
-              pipeline: trace.pipeline
-            }
-          )
-        ]);
+    const view = new DataView(data);
+    const result: [PipelineSpecs, ArrayBuffer, Trace][] = [];
+
+    let cursor = 0;
+    for (let tIdx = 0; tIdx < traces.length; ++tIdx)
+    {
+      const blockLength = view.getInt32(cursor, true);
+      console.log(blockLength);
+      result.push([ specs[tIdx], data.slice(cursor + 4, cursor + 4 + blockLength), traces[tIdx]]);
+
+      cursor += 4 + blockLength;
     }
 
-    return [ ...this.dataCache[hash], trace ];
+    return result;
   }
 
   getTraceHash(trace: Trace): string {

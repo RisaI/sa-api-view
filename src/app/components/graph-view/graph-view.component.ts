@@ -38,23 +38,23 @@ export class GraphViewComponent implements OnInit, OnChanges {
     });
   }
 
-  loadTrace = async (trace: Trace) => {
-    const [ specs, data ] = await this.dataService.getTraceData(trace);
-    const des = await deserializePlotly(specs, data);
-    const idx = this.loadedData.findIndex(d => d.id === trace.id);
+  // loadTrace = async (trace: Trace) => {
+  //   const [ specs, data ] = await this.dataService.getTraceData(trace);
+  //   const des = await deserializePlotly(specs, data);
+  //   const idx = this.loadedData.findIndex(d => d.id === trace.id);
 
-    if (idx >= 0) {
-      this.loadedData.find(d => d.id === trace.id).data = des;
-    } else {
-      this.loadedData = [ ...this.loadedData, {
-        id: trace.id,
-        type: 'scattergl',
-        name: trace.title,
-        mode: 'lines+markers',
-        ...des,
-      } ];
-    }
-  }
+  //   if (idx >= 0) {
+  //     this.loadedData.find(d => d.id === trace.id).data = des;
+  //   } else {
+  //     this.loadedData = [ ...this.loadedData, {
+  //       id: trace.id,
+  //       type: 'scattergl',
+  //       name: trace.title,
+  //       mode: 'lines+markers',
+  //       ...des,
+  //     } ];
+  //   }
+  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.traces) {
@@ -64,9 +64,33 @@ export class GraphViewComponent implements OnInit, OnChanges {
 
       this.loadedData = this.loadedData.filter(d => removedTraces.findIndex(t => t.id === d.id) < 0);
 
-      asyncPool(64, newTraces, this.loadTrace).then(_ => {
-        ++this.revision;
-      });
+      if (newTraces.length > 0) {
+        this.dataService.getTraceData(newTraces).then(result => {
+
+          Promise.all(result.map(t => deserializePlotly(t[0], t[1]).then(r => {
+            const idx = this.loadedData.findIndex(d => d.id === t[2].id);
+
+            if (idx >= 0) {
+              this.loadedData.find(d => d.id === t[2].id).data = r;
+            } else {
+              this.loadedData = [ ...this.loadedData, {
+                id: t[2].id,
+                type: 'scattergl',
+                name: t[2].title,
+                mode: 'lines+markers',
+                ...r,
+              } ];
+            }
+          }))).then(
+            _ => ++this.revision
+          );
+
+        });
+      }
+
+      // asyncPool(64, newTraces, this.loadTrace).then(_ => {
+      //   ++this.revision;
+      // });
     }
   }
 

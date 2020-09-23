@@ -1,4 +1,4 @@
-const deserializers: { [key: string]: { size: number, parser: (view: DataView, pos: number) => any } } = {
+export const deserializers: { [key: string]: { size: number, parser: (view: DataView, pos: number) => any } } = {
     datetime: { size: 4, parser: (view, pos) => new Date(view.getInt32(pos, true) * 1000) },
     byte:     { size: 1, parser: (view, pos) => view.getInt8(pos) },
     boolean:  { size: 1, parser: (view, pos) => view.getInt8(pos) > 0 },
@@ -75,7 +75,6 @@ export async function treshold(set: PipelineSpecs, stream: ArrayBuffer, tres: nu
         if (yD.parser(view, i) > tres) {
             return true;
         }
-        i += yD.size;
     }
 
     return false;

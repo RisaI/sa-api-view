@@ -105,9 +105,9 @@ export class AppComponent {
     const remaining: Trace[] = [];
 
     for (const trace of this.selectedGraph.traces) {
-      const data = await this.dataService.getTraceData(trace);
+      const data = await this.dataService.getTraceData([trace]);
 
-      if (!(await isZero(data[0], data[1]))) {
+      if (!(await isZero(data[0][0], data[0][1]))) {
         remaining.push(trace);
       }
     }
@@ -119,9 +119,9 @@ export class AppComponent {
     const remaining: string[] = [];
 
     for (const trace of this.selectedGraph.traces) {
-      const data = await this.dataService.getTraceData(trace);
+      const data = await this.dataService.getTraceData([trace]);
 
-      if ((await treshold(data[0], data[1], tres))) {
+      if ((await treshold(data[0][0], data[0][1], tres))) {
         remaining.push(trace.id);
       }
     }
