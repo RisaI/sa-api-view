@@ -18,3 +18,7 @@
   width: 200px;
   margin: auto;
 }
+
+nav.navbar {
+  padding: 0;
+}

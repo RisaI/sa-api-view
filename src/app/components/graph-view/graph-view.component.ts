@@ -1,17 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { deserializePlotly } from '../../services/deserialization';
 import { PlotlyService } from 'angular-plotly.js';
 import { Plotly } from 'angular-plotly.js/src/app/shared/plotly.interface';
 import { ControlsService } from 'src/app/services/controls.service';
-import asyncPool from '../../../asyncPool';
 
 @Component({
   selector: 'app-graph-view',
   templateUrl: './graph-view.component.html',
   styleUrls: ['./graph-view.component.css'],
 })
-export class GraphViewComponent implements OnInit, OnChanges {
+export class GraphViewComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private dataService: DataService, private plotlyService: PlotlyService, private controlsService: ControlsService) { }
 
@@ -37,24 +36,6 @@ export class GraphViewComponent implements OnInit, OnChanges {
       });
     });
   }
-
-  // loadTrace = async (trace: Trace) => {
-  //   const [ specs, data ] = await this.dataService.getTraceData(trace);
-  //   const des = await deserializePlotly(specs, data);
-  //   const idx = this.loadedData.findIndex(d => d.id === trace.id);
-
-  //   if (idx >= 0) {
-  //     this.loadedData.find(d => d.id === trace.id).data = des;
-  //   } else {
-  //     this.loadedData = [ ...this.loadedData, {
-  //       id: trace.id,
-  //       type: 'scattergl',
-  //       name: trace.title,
-  //       mode: 'lines+markers',
-  //       ...des,
-  //     } ];
-  //   }
-  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.traces) {
@@ -92,6 +73,10 @@ export class GraphViewComponent implements OnInit, OnChanges {
       //   ++this.revision;
       // });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.plotlyService.getPlotly().purge(this.plotlyDiv);
   }
 
   changeExtent(width: number, height: number): void {

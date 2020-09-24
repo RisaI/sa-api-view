@@ -133,7 +133,7 @@ export class AppComponent {
     switch (action) {
       // TODO: filtering
       case 'sel-unq':
-        const hashes = this.selectedGraph.traces.map(t => this.dataService.getTraceHash(t));
+        const hashes = this.selectedGraph.traces.map(t => this.dataService.getTraceHash(t.xRange[0], t.xRange[1], t));
         const newSel: string[] = [];
         for (let a = hashes.length - 1; a >= 0; --a) {
           let occured = false;

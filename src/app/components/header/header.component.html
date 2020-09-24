@@ -9,7 +9,7 @@
     <div class="collapse navbar-collapse show">
       <ul ngbNav class="nav ml-auto">
         <ng-content></ng-content>
-        <li ngbNavItem><a class="nav-link" href="#" (click)="toggleLock.emit()">Toggle lock</a></li>
+        <li ngbNavItem title="Odemknout/zamknout rozvržení"><a class="nav-link" href="#" (click)="toggleLock.emit()"><fa-icon [icon]="layoutUnlocked ? faUnlock : faLock"></fa-icon></a></li>
         <li ngbNavItem><a class="nav-link" href="#" (click)="addGraph.emit()">Přidat graf</a></li>
       </ul>
     </div>
