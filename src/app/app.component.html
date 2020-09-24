@@ -63,7 +63,8 @@
           enabled: layoutUnlocked
         },
         pushItems: true,
-        compactType: 'compactUp'
+        compactType: 'compactUp',
+        displayGrid: layoutUnlocked ? 'always' : 'none'
       }"
     >
       <gridster-item class="d-flex" *ngFor="let graph of graphs" [item]="graph">
