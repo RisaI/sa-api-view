@@ -13,15 +13,13 @@ type CTrace = Trace & { availableRange: [any, any] };
 export class TraceImportModalComponent implements OnInit {
 
   @Input() show = false;
-  @Input() usedIds: string[] = [];
+  @Input() graph: Graph | undefined;
 
   @Output() toggle = new EventEmitter();
+  @Output() addGraph = new EventEmitter<Graph>();
   @Output() import = new EventEmitter<Trace[]>();
 
   sources: DataSource[];
-
-  id: string;
-  title: string;
   timeRange: [Date, Date];
 
   items: TreeviewItem[];
@@ -77,9 +75,21 @@ export class TraceImportModalComponent implements OnInit {
   }
 
   onImport(): void {
-    this.selected.forEach(s => s.xRange = this.timeRange.map(dateToTimestamp) as [number, number]);
     this.toggle.emit();
-    this.import.emit(this.selected);
+    if (!this.graph) {
+      this.addGraph.emit({
+        id: 0,
+
+        title: 'Nový graf',
+        xLabel: 'osa x',
+        yLabel: 'osa y',
+
+        xRange: this.timeRange.map(dateToTimestamp) as [number, number],
+        traces: this.selected || []
+      });
+    } else {
+      this.import.emit(this.selected);
+    }
   }
 
   onSelectedChange = (e: any) => {

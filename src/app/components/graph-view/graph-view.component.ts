@@ -42,14 +42,15 @@ export class GraphViewComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.traces) {
-      const newTraces: Trace[] = changes.traces.currentValue.filter(t => changes.traces.previousValue.indexOf(t) < 0);
+      const newTraces: Trace[] = changes.traces.previousValue ? 
+        changes.traces.currentValue.filter(t => changes.traces.previousValue.indexOf(t) < 0) : changes.traces.currentValue;
       const removedTraces: Trace[] = changes.traces.previousValue ?
         changes.traces.previousValue.filter(t => changes.traces.currentValue.indexOf(t) < 0) : [];
 
       this.loadedData = this.loadedData.filter(d => removedTraces.findIndex(t => t.id === d.id) < 0);
 
       if (newTraces.length > 0) {
-        this.dataService.getTraceData(newTraces).then(result => {
+        this.dataService.getTraceData(this.graph.xRange[0], this.graph.xRange[1], newTraces).then(result => {
 
           Promise.all(result.map(t => deserializePlotly(t[0], t[1]).then(r => {
             const idx = this.loadedData.findIndex(d => d.id === t[2].id);

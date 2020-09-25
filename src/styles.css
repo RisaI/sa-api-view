@@ -5,3 +5,9 @@
 @import url("assets/css/fonts.css");
 @import url("assets/css/custom.css");
 @import "~@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
+
+.modal.show {
+    display: block;
+    z-index: 900;
+    margin-top: 32px;
+}

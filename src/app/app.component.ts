@@ -4,6 +4,7 @@ import { isZero, treshold } from './services/deserialization';
 import { DataService } from './services/data.service';
 import { faArrowUp, faArrowDown, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { GridsterItem } from 'angular-gridster2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -18,14 +19,18 @@ export class AppComponent {
   faAdd = faPlus;
 
   layoutUnlocked = false;
-  traceImportOpen = false;
+  traceImportOpen = 0;
   tresholdOpen = false;
 
   graphs: (Graph & GridsterItem)[] = [];
   selectedGraph?: (Graph & GridsterItem) = undefined;
   selectedTraces: Trace['id'][] = [];
 
-  constructor(private controlsService: ControlsService, private dataService: DataService) {
+  constructor(
+    private controlsService: ControlsService,
+    private dataService: DataService,
+    private modalService: NgbModal)
+  {
 
   }
 
@@ -33,21 +38,12 @@ export class AppComponent {
     this.layoutUnlocked = !this.layoutUnlocked;
   }
 
-  onAddGraph(): void {
-    const newId = this.graphs.length > 0 ? Math.max(...this.graphs.map(g => g.id)) + 1 : 0;
+  onAddGraph(graph: Graph & GridsterItem): void {
+    graph.id = this.graphs.length > 0 ? Math.max(...this.graphs.map(g => g.id)) + 1 : 0;
+    graph.x = graph.y = 0;
+    graph.cols = 2 * (graph.rows = 3);
 
-    this.graphs = [ ...this.graphs, {
-      id: newId,
-      title: 'Graph ' + newId.toString(),
-      xLabel: 'osa x',
-      yLabel: 'osa y',
-      traces: [ ],
-
-      x: 0,
-      y: 0,
-      rows: 3,
-      cols: 6,
-    } ];
+    this.graphs = [ ...this.graphs, graph as any ];
   }
 
   selectedGraphTraceIds = () => this.selectedGraph?.traces?.map(t => t.id);
@@ -68,6 +64,10 @@ export class AppComponent {
     }
   }
 
+  open(content) {
+    this.modalService.open(content);
+  }
+
   importTraces(traces: Trace[]): void {
     this.selectedGraph.traces = [ ...this.selectedGraph.traces, ...traces ];
   }
@@ -82,9 +82,10 @@ export class AppComponent {
 
   async filterZero(): Promise<void> {
     const remaining: Trace[] = [];
+    const sel = this.selectedGraph;
 
     for (const trace of this.selectedGraph.traces) {
-      const data = await this.dataService.getTraceData([trace]);
+      const data = await this.dataService.getTraceData(sel.xRange[0], sel.xRange[1], [trace]);
 
       if (!(await isZero(data[0][0], data[0][1]))) {
         remaining.push(trace);
@@ -96,9 +97,10 @@ export class AppComponent {
 
   async filterTreshold(tres: number): Promise<void> {
     const remaining: string[] = [];
+    const sel = this.selectedGraph;
 
-    for (const trace of this.selectedGraph.traces) {
-      const data = await this.dataService.getTraceData([trace]);
+    for (const trace of sel.traces) {
+      const data = await this.dataService.getTraceData(sel.xRange[0], sel.xRange[1], [trace]);
 
       if ((await treshold(data[0][0], data[0][1], tres))) {
         remaining.push(trace.id);
@@ -109,10 +111,12 @@ export class AppComponent {
   }
 
   traceControl(action: TraceAction): void {
+    const sel = this.selectedGraph;
+
     switch (action) {
       // TODO: filtering
       case 'sel-unq':
-        const hashes = this.selectedGraph.traces.map(t => this.dataService.getTraceHash(t.xRange[0], t.xRange[1], t));
+        const hashes = sel.traces.map(t => this.dataService.getTraceHash(t));
         const newSel: string[] = [];
         for (let a = hashes.length - 1; a >= 0; --a) {
           let occured = false;

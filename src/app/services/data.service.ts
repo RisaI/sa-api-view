@@ -38,12 +38,10 @@ export class DataService {
     ).toPromise();
   }
 
-  async getTraceData(traces: Trace[]): Promise<[PipelineSpecs, ArrayBuffer, Trace][]> {
-    const [ from, to ] = [ traces[0].xRange && String(traces[0].xRange[0]), traces[0].xRange && String(traces[0].xRange[1]) ];
-
+  async getTraceData(from: any, to: any, traces: Trace[]): Promise<[PipelineSpecs, ArrayBuffer, Trace][]> {
     const specs = await this.getPipelineSpecs({ pipelines: traces.map(t => t.pipeline) } as PipelineRequest);
     const data = await this.getPipelineData({
-      pipelines: traces.map(t => t.pipeline), from, to,
+      pipelines: traces.map(t => t.pipeline), from: String(from), to: String(to),
     });
 
     const view = new DataView(data);
@@ -61,7 +59,7 @@ export class DataService {
     return result;
   }
 
-  getTraceHash(from: any, to: any, trace: Trace): string {
-    return Md5.hashStr(from + to + JSON.stringify(trace.pipeline), false) as string;
+  getTraceHash(trace: Trace): string {
+    return Md5.hashStr(JSON.stringify(trace.pipeline), false) as string;
   }
 }

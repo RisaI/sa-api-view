@@ -9,6 +9,7 @@ interface Graph {
 
     // Functionality
     xType?: string;
+    xRange: [ any, any ];
     traces: Trace[];
 
     // Runtime
@@ -20,7 +21,6 @@ interface Trace {
     title: string;
     
     pipeline: NodeDescriptor;
-    xRange?: [ any, any ];
 }
 
 type TraceAction = 'sel-unq' | 'sel-all' | 'inv' | 'des' | 'tres' |

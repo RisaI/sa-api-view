@@ -25,7 +25,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TreeviewModule } from 'ngx-treeview';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GridsterModule } from 'angular-gridster2';
-import { AddGraphModalComponent } from './components/add-graph-modal/add-graph-modal.component';
 
 // PlotlyViwModule.plotlyjs = PlotlyJS;
 
@@ -39,7 +38,6 @@ import { AddGraphModalComponent } from './components/add-graph-modal/add-graph-m
     GraphViewComponent,
     TraceImportModalComponent,
     TresholdModalComponent,
-    AddGraphModalComponent,
   ],
   imports: [
     BrowserModule,
