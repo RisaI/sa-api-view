@@ -9,8 +9,8 @@
     <div class="collapse navbar-collapse show">
       <ul ngbNav class="nav ml-auto">
         <ng-content></ng-content>
-        <li ngbNavItem title="Odemknout/zamknout rozvržení"><a class="nav-link" href="#" (click)="toggleLock.emit()"><fa-icon [icon]="layoutUnlocked ? faUnlock : faLock"></fa-icon></a></li>
-        <li ngbNavItem><a class="nav-link" href="#" (click)="addGraph.emit()">Přidat graf</a></li>
+        <li title="Přidat graf" ngbNavItem><a class="nav-link" href="#" (click)="addGraph.emit()"><fa-icon [icon]="faPlus"></fa-icon></a></li>
+        <li title="Odemknout/zamknout rozvržení" ngbNavItem><a class="nav-link" href="#" (click)="toggleLock.emit()"><fa-icon [icon]="layoutUnlocked ? faUnlock : faLock"></fa-icon></a></li>
       </ul>
     </div>
   </nav>

@@ -12,7 +12,7 @@ export class TraceControlsComponent implements OnInit {
   // TODO: make this static
   buttons: { label: string, action: TraceAction }[][] = [
     [
-      { label: 'Filtering', action: 'filter' },
+      { label: 'Filter', action: 'filter' },
       { label: 'SelUniq', action: 'sel-unq' },
       { label: 'Search', action: 'search' },
       { label: 'Thres', action: 'tres' }

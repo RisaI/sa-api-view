@@ -1,5 +1,5 @@
 import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
-import { faLock, faUnlock } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faUnlock, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header',
@@ -10,6 +10,7 @@ export class HeaderComponent implements OnInit {
 
   faLock = faLock;
   faUnlock = faUnlock;
+  faPlus = faPlus;
 
   @Input() layoutUnlocked: boolean;
 

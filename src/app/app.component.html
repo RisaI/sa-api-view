@@ -8,21 +8,6 @@
 
   <!-- Graph controls -->
   <ng-container *ngIf="selectedGraph !== undefined; else noGraph">
-    <div>
-      <a
-        class="nav-btn"
-        [class.active]="canMoveUp()"
-        (click)="canMoveUp() && moveUp()"
-      ><fa-icon [icon]="faUp"></fa-icon></a>
-      <a
-        class="nav-btn"
-        [class.active]="canMoveDown()"
-        (click)="canMoveDown() && moveDown()"
-      ><fa-icon [icon]="faDown"></fa-icon></a>
-      <a class="nav-btn active" (click)="removeGraph()">
-        <fa-icon [icon]="faTrash"></fa-icon>
-      </a>
-    </div>
     <ul class="sidebar-menu"><li class="header">VLASTNOSTI</li></ul>
     <form style="color: white">
       <div class="form-group"><label>Název:</label><input class="form-control" type="text" value="{{selectedGraph.title}}"  (change)="selectedGraph.title  = $event.target.value"></div>
@@ -72,7 +57,9 @@
           [graph]="graph"
           [traces]="graph.traces"
           [class.active]="selectedGraph === graph"
-          (click)="selectedGraph = graph; selectedTraces = []">
+          (click)="selectedGraph = graph; selectedTraces = []"
+          (delete)="removeGraph(graph)"
+        >
         </app-graph-view>
       </gridster-item>
     </gridster>

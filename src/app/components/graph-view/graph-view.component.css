@@ -1,10 +1,9 @@
 :host {
     flex: 1;
-    margin: 0.25rem;
     display: flex;
     flex-direction: column;
 
-    border: 1px solid lightgray;
+    border: 0.2rem solid lightgray;
     background-color: #ffffff;
 
     flex-grow: 1;
@@ -14,7 +13,7 @@
 }
 
 :host(.active) {
-    border: 1px solid #3c8dbc;
+    border: 0.2rem solid #3c8dbc;
 }
 
 .graph-content {

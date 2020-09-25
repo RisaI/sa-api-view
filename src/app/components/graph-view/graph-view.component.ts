@@ -4,6 +4,7 @@ import { deserializePlotly } from '../../services/deserialization';
 import { PlotlyService } from 'angular-plotly.js';
 import { Plotly } from 'angular-plotly.js/src/app/shared/plotly.interface';
 import { ControlsService } from 'src/app/services/controls.service';
+import { faTrash, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-graph-view',
@@ -14,11 +15,13 @@ export class GraphViewComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private dataService: DataService, private plotlyService: PlotlyService, private controlsService: ControlsService) { }
 
+  faTrash = faWindowClose;
+
   @Input() graph: Graph;
   @Input() traces: Trace[];
   @Input() active?: boolean;
 
-  @Output() selected = new EventEmitter<Graph>();
+  @Output() delete = new EventEmitter();
 
   loadedData: any[] = [];
   graphWidth = 0;
@@ -76,7 +79,7 @@ export class GraphViewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.plotlyService.getPlotly().purge(this.plotlyDiv);
+    this.plotlyDiv && this.plotlyService.getPlotly().purge(this.plotlyDiv);
   }
 
   changeExtent(width: number, height: number): void {

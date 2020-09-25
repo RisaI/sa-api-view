@@ -51,41 +51,20 @@ export class AppComponent {
   }
 
   selectedGraphTraceIds = () => this.selectedGraph?.traces?.map(t => t.id);
-  canMoveUp = () => this.graphs.indexOf(this.selectedGraph) > 0;
-  canMoveDown = () => this.graphs.indexOf(this.selectedGraph) < this.graphs.length - 1;
 
-  moveUp(): void {
-    const selIdx = this.graphs.indexOf(this.selectedGraph);
-
-    if (selIdx >= 0) {
-      const temp = this.graphs[selIdx - 1];
-
-      this.graphs[selIdx - 1] = this.graphs[selIdx];
-      this.graphs[selIdx] = temp;
-    }
-  }
-
-  moveDown(): void {
-    const selIdx = this.graphs.indexOf(this.selectedGraph);
-
-    if (selIdx >= 0) {
-      const temp = this.graphs[selIdx + 1];
-
-      this.graphs[selIdx + 1] = this.graphs[selIdx];
-      this.graphs[selIdx] = temp;
-    }
-  }
-
-  removeGraph(): void {
-    const selIdx = this.graphs.indexOf(this.selectedGraph);
+  removeGraph(graph: Graph): void {
+    const selIdx = this.graphs.indexOf(graph as Graph & GridsterItem);
     this.graphs.splice(selIdx, 1);
 
-    if (selIdx < this.graphs.length) {
-      this.selectedGraph = this.graphs[selIdx];
-    } else if (this.graphs.length > 0) {
-      this.selectedGraph = this.graphs[this.graphs.length - 1];
-    } else {
-      this.selectedGraph = undefined;
+    if (graph === this.selectedGraph)
+    {
+      if (selIdx < this.graphs.length) {
+        this.selectedGraph = this.graphs[selIdx];
+      } else if (this.graphs.length > 0) {
+        this.selectedGraph = this.graphs[this.graphs.length - 1];
+      } else {
+        this.selectedGraph = undefined;
+      }
     }
   }
 

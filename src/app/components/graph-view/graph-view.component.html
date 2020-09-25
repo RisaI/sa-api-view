@@ -1,4 +1,11 @@
-<h1 style="text-align: 'center'">{{graph.title}}</h1>
+<div class="text-center position-relative">
+    <h1 class="w-100 text-center">
+        {{graph.title}}
+    </h1>
+    <div style="right: 0; top: 0;" class="position-absolute buttons">
+        <a class="btn btn-lg" (click)="delete.emit(); $event.stopPropagation();"><fa-icon [icon]="faTrash"></fa-icon></a>
+    </div>
+</div>
 <div class="graph-content" sizeMe [monitorHeight]="true" (resize)="changeExtent($event.width, $event.height)">
     <div *ngIf="graph.traces.length <= 0; else content">Graf nemá žádné křivky</div>
     <ng-template #content>
