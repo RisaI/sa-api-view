@@ -1,7 +1,7 @@
 <app-header
   [layoutUnlocked]="layoutUnlocked"
   (toggleLock)="onToggleLock()"
-  (addGraph)="traceImportOpen = 2"
+  (addGraph)="traceImportOpen = 1"
 ></app-header>
 
 <app-side-menu>
@@ -17,7 +17,7 @@
     <ul class="sidebar-menu">
       <li class="header" style="display: flex; align-items: center;">
         KŘIVKY
-        <span class="btn btn-menu active text-secondary" (click)="traceImportOpen = 1"><fa-icon [icon]="faAdd"></fa-icon></span>
+        <span class="btn btn-menu active text-secondary" (click)="traceImportOpen = 2"><fa-icon [icon]="faAdd"></fa-icon></span>
       </li>
     </ul>
     <app-trace-controls (action)="traceControl($event)"></app-trace-controls>

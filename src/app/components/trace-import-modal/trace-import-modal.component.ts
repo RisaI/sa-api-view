@@ -1,16 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeviewItem } from 'ngx-treeview';
 import { DataService } from 'src/app/services/data.service';
 import { parseTimestamp, dateToTimestamp } from 'src/app/services/deserialization';
 
-type CTrace = Trace & { availableRange: [any, any] };
+type CTrace = Trace & { availableRange: [any, any], xtype: string };
 
 @Component({
   selector: 'app-trace-import-modal',
   templateUrl: './trace-import-modal.component.html',
   styleUrls: ['./trace-import-modal.component.css']
 })
-export class TraceImportModalComponent implements OnInit {
+export class TraceImportModalComponent implements OnInit, OnChanges {
 
   @Input() show = false;
   @Input() graph: Graph | undefined;
@@ -21,9 +21,14 @@ export class TraceImportModalComponent implements OnInit {
 
   sources: DataSource[];
   timeRange: [Date, Date];
+  name: string;
+  xLabel: string;
+  yLabel: string;
 
   items: TreeviewItem[];
-  selected: CTrace[];
+  selected: CTrace[] = [];
+  minDate: Date;
+  maxDate: Date;
 
   constructor(private dataClient: DataService) { }
 
@@ -49,6 +54,7 @@ export class TraceImportModalComponent implements OnInit {
               }
             },
             availableRange: set.availableXRange,
+            xtype: set.xType
           } as CTrace,
           collapsed: true,
           checked: false,
@@ -66,6 +72,7 @@ export class TraceImportModalComponent implements OnInit {
                 }
               },
               availableRange: set.availableXRange,
+              xtype: set.xType
             } as CTrace,
             checked: false,
           })) : undefined,
@@ -74,32 +81,64 @@ export class TraceImportModalComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.show && changes.show.currentValue && changes.show.previousValue !== changes.show.currentValue) {
+      this.items.forEach(i => {
+        i.setCheckedRecursive(false);
+        i.setCollapsedRecursive(true);
+      });
+      this.selected = [];
+
+      if (!this.graph) {
+        this.timeRange = undefined;
+        this.name = 'Nový graf';
+        this.xLabel = 'osa x';
+        this.yLabel = 'osa y';
+      }
+    }
+  }
+
   onImport(): void {
     this.toggle.emit();
     if (!this.graph) {
       this.addGraph.emit({
         id: 0,
 
-        title: 'Nový graf',
-        xLabel: 'osa x',
-        yLabel: 'osa y',
+        title:  this.name,
+        xLabel: this.xLabel,
+        yLabel: this.yLabel,
 
         xRange: this.timeRange.map(dateToTimestamp) as [number, number],
-        traces: this.selected || []
+        traces: this.selected
       });
     } else {
       this.import.emit(this.selected);
     }
   }
 
-  onSelectedChange = (e: any) => {
+  onSelectedChange = (e: CTrace[]) => {
+    if (this.selected.length <= 0 && e.length > 0) {
+      const type = e[0].xtype;
+
+      // TODO: check if this works
+      // this.items.forEach(i => i.children.forEach(ii => {
+      //   if (ii.value.xtype !== type) {
+      //     ii.setCheckedRecursive(false);
+      //     ii.disabled = true;
+      //   }
+      // }));
+
+      this.minDate = parseTimestamp(Math.max(...e.map(t => t.availableRange[0])));
+      this.maxDate = parseTimestamp(Math.min(...e.map(t => t.availableRange[1])));
+      this.timeRange = [ this.minDate, this.maxDate ];
+    } else if (e.length <= 0) {
+      this.timeRange = undefined;
+    }
+
     this.selected = e;
   }
 
   rangeChange(range: [Date, Date]): void {
     this.timeRange = range;
   }
-
-  getMinDate = () => parseTimestamp((this.selected && this.selected[0]?.availableRange[0]) || new Date());
-  getMaxDate = () => parseTimestamp((this.selected && this.selected[0]?.availableRange[1]) || new Date());
 }

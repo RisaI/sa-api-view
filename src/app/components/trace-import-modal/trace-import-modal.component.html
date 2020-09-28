@@ -15,38 +15,52 @@
               [config]="{
                 hasAllCheckbox: false,
                 hasCollapseExpand: false,
-                maxHeight: 500
+                maxHeight: 500,
+                minHeight: 500
               }"
               (selectedChange)="onSelectedChange($event)"
             >
             </ngx-treeview>
           </div>
-          <div class="col">
-            <form>
-              <div class="form-group">
-                <label>Rozmezí:</label>
-                <div class="input-group">
-                  <input
-                    class="form-control"
-                    name="timeRange"
-  
-                    [owlDateTime]="timerangepicker"
-                    [owlDateTimeTrigger]="timerangepicker"
-  
-                    [selectMode]="'range'"
-                    [min]="getMinDate()"
-                    [max]="getMaxDate()"
-                    [(ngModel)]="timeRange"
-  
-                    readonly
-                  >
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" (click)="timeRange = [ getMinDate(), getMaxDate() ]">X</button>
-                  </span>
-                </div>
-                <owl-date-time #timerangepicker></owl-date-time>
+          <div class="col" style="min-height: 500px;" *ngIf="!graph">
+            <div class="form-group">
+              <label>Název grafu:</label>
+              <input class="form-control" [(ngModel)]="name" name="title" >
+            </div>
+            <div class="form-group">
+              <label>Popis osy x:</label>
+              <input class="form-control" [(ngModel)]="xLabel" name="xLabel" >
+            </div>
+            <div class="form-group">
+              <label>Popis osy y:</label>
+              <input class="form-control" [(ngModel)]="yLabel" name="yLabel" >
+            </div>
+            <div class="form-group">
+              <label>Rozmezí:</label>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  name="timeRange"
+
+                  [owlDateTime]="timerangepicker"
+                  [owlDateTimeTrigger]="timerangepicker"
+
+                  [selectMode]="'range'"
+                  [min]="minDate"
+                  [max]="maxDate"
+                  [(ngModel)]="timeRange"
+                  [class.is-invalid]="!timeRange"
+                  [disabled]="selected.length <= 0"
+
+                  required
+                  readonly
+                >
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" (click)="timeRange = [ minDate, maxDate ]">X</button>
+                </span>
               </div>
-            </form>
+              <owl-date-time #timerangepicker></owl-date-time>
+            </div>
           </div>
         </form>
 
@@ -57,7 +71,8 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" (click)="toggle.emit()">Zrušit</button>
-        <button type="button" class="btn btn-primary" (click)="onImport()">Importovat</button>
+        <button *ngIf="!graph" [disabled]="!timeRange || selected.length <= 0" type="button" class="btn btn-primary" (click)="onImport()">Přidat</button>
+        <button *ngIf="graph"  [disabled]="selected.length <= 0" type="button" class="btn btn-primary" (click)="onImport()">Importovat</button>
       </div>
     </div>
   </div>

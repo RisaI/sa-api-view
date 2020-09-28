@@ -64,7 +64,7 @@ export class AppComponent {
     }
   }
 
-  open(content) {
+  open(content): void {
     this.modalService.open(content);
   }
 
