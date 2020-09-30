@@ -12,7 +12,7 @@ export const deserializers: { [key: string]: { size: number, parser: (view: Data
     // double:   { size: 8, parser: (view, pos) => view.getFloat64(pos, true) },
 };
 
-export async function deserializePlotly(set: PipelineSpecs, stream: ArrayBuffer): Promise<{x: any[], y: any[]}> {
+export async function deserializePlotly(set: PipelineSpecs, view: DataView): Promise<{x: any[], y: any[]}> {
     const xD = deserializers[set.xType];
     const yD = deserializers[set.yType];
 
@@ -25,9 +25,8 @@ export async function deserializePlotly(set: PipelineSpecs, stream: ArrayBuffer)
     }
 
     const result: { x: any[], y: any[] } = { x: [], y: [] };
-    const view = new DataView(stream);
 
-    for (let i = 0; i < stream.byteLength;) {
+    for (let i = 0; i < view.byteLength;) {
         const x = xD.parser(view, i);
         i += xD.size;
 
@@ -41,7 +40,7 @@ export async function deserializePlotly(set: PipelineSpecs, stream: ArrayBuffer)
     return result;
 }
 
-export async function isZero(set: PipelineSpecs, stream: ArrayBuffer): Promise<boolean> {
+export async function isZero(set: PipelineSpecs, view: DataView): Promise<boolean> {
     const xSize = deserializers[set.xType].size;
     const yD = deserializers[set.yType];
 
@@ -49,8 +48,7 @@ export async function isZero(set: PipelineSpecs, stream: ArrayBuffer): Promise<b
         throw new Error(`Cannot deserialize type '${set.yType}'`);
     }
 
-    const view = new DataView(stream);
-    for (let i = 0; i < stream.byteLength;) {
+    for (let i = 0; i < view.byteLength;) {
         i += xSize;
         if (yD.parser(view, i) !== 0) {
             return false;
@@ -61,7 +59,7 @@ export async function isZero(set: PipelineSpecs, stream: ArrayBuffer): Promise<b
     return true;
 }
 
-export async function treshold(set: PipelineSpecs, stream: ArrayBuffer, tres: number): Promise<boolean> {
+export async function treshold(set: PipelineSpecs, view: DataView, tres: number): Promise<boolean> {
     const xSize = deserializers[set.xType].size;
     const yD = deserializers[set.yType];
 
@@ -69,12 +67,12 @@ export async function treshold(set: PipelineSpecs, stream: ArrayBuffer, tres: nu
         throw new Error(`Cannot deserialize type '${set.yType}'`);
     }
 
-    const view = new DataView(stream);
-    for (let i = 0; i < stream.byteLength;) {
+    for (let i = 0; i < view.byteLength;) {
         i += xSize;
         if (yD.parser(view, i) > tres) {
             return true;
         }
+        i += yD.size;
     }
 
     return false;

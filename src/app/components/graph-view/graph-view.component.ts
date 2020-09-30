@@ -42,26 +42,30 @@ export class GraphViewComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.traces) {
-      const newTraces: Trace[] = changes.traces.previousValue ? 
+      const newTraces: Trace[] = changes.traces.previousValue ?
         changes.traces.currentValue.filter(t => changes.traces.previousValue.indexOf(t) < 0) : changes.traces.currentValue;
       const removedTraces: Trace[] = changes.traces.previousValue ?
         changes.traces.previousValue.filter(t => changes.traces.currentValue.indexOf(t) < 0) : [];
 
       this.loadedData = this.loadedData.filter(d => removedTraces.findIndex(t => t.id === d.id) < 0);
+      if (removedTraces.length > 0) {
+        ++this.revision;
+      }
 
       if (newTraces.length > 0) {
         this.dataService.getTraceData(this.graph.xRange[0], this.graph.xRange[1], newTraces).then(result => {
 
-          Promise.all(result.map(t => deserializePlotly(t[0], t[1]).then(r => {
-            const idx = this.loadedData.findIndex(d => d.id === t[2].id);
+          Promise.all(result.map((t, i) => deserializePlotly(t[0], t[1]).then(r => {
+            const trace = newTraces[i];
+            const idx = this.loadedData.findIndex(d => d.id === trace.id);
 
             if (idx >= 0) {
-              this.loadedData.find(d => d.id === t[2].id).data = r;
+              this.loadedData.find(d => d.id === trace.id).data = r;
             } else {
               this.loadedData = [ ...this.loadedData, {
-                id: t[2].id,
+                id: trace.id,
                 type: 'scattergl',
-                name: t[2].title,
+                name: trace.title,
                 mode: 'lines+markers',
                 ...r,
               } ];
@@ -80,7 +84,9 @@ export class GraphViewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.plotlyDiv && this.plotlyService.getPlotly().purge(this.plotlyDiv);
+    if (this.plotlyDiv) {
+      this.plotlyService.getPlotly().purge(this.plotlyDiv);
+    }
   }
 
   changeExtent(width: number, height: number): void {
