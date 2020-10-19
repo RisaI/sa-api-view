@@ -41,7 +41,7 @@ export class AppComponent {
   onAddGraph(graph: Graph & GridsterItem): void {
     graph.id = this.graphs.length > 0 ? Math.max(...this.graphs.map(g => g.id)) + 1 : 0;
     graph.x = graph.y = 0;
-    graph.cols = 2 * (graph.rows = 3);
+    graph.cols = 4 * (graph.rows = 3);
 
     this.graphs = [ ...this.graphs, graph as any ];
   }
@@ -78,6 +78,10 @@ export class AppComponent {
     } else {
       this.selectedTraces = [ ...this.selectedTraces, id];
     }
+  }
+
+  showLdevMap(id: string): void {
+    console.log(id);
   }
 
   async filterZero(): Promise<void> {

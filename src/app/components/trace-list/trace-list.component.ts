@@ -13,6 +13,7 @@ export class TraceListComponent implements OnInit {
   @Input() selected: Trace['id'][] = [];
 
   @Output() toggle = new EventEmitter<Trace['id']>();
+  @Output() showLdevMap = new EventEmitter<string>();
 
   sources: DataSource[] = [];
 
@@ -25,6 +26,7 @@ export class TraceListComponent implements OnInit {
   hasLdevMaps = (trace: Trace) =>
     trace.pipeline.type === 'data' &&
     (trace.pipeline as DataNodeDescriptor).dataset.id.startsWith('LDEV') &&
-    this.sources.find(s => s.id === (trace.pipeline as DataNodeDescriptor).dataset.source)?.features.indexOf('ldev_map') >= 0;
+    this.sources.find(s => s.id === (trace.pipeline as DataNodeDescriptor).dataset.source)?.features.indexOf('ldev_map') >= 0
 
+  getLdevId = (trace: Trace) => (trace.pipeline as DataNodeDescriptor).dataset.variant;
 }

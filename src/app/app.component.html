@@ -24,8 +24,9 @@
     <app-trace-list
       [traces]="selectedGraph.traces"
       [selected]="selectedTraces"
-      [sources]="sources"
-      (toggle)="toggleTrace($event)">
+      (toggle)="toggleTrace($event)"
+      (showLdevMap)="showLdevMap($event)"
+    >
     </app-trace-list>
   </ng-container>
 

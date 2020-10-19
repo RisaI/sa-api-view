@@ -1,0 +1,20 @@
+<div class="modal" tabindex="-1" role="dialog" [class.show]="show">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">LDEV Mapa</h4>
+        <button type="button" class="close" aria-label="Close" (click)="toggle.emit()"><span aria-hidden="true">&times;</span></button>
+      </div>
+
+      <div class="modal-body">
+        <ng-template #loading>
+          Načítá se mapa...
+        </ng-template>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="toggle.emit()">Zrušit</button>
+      </div>
+    </div>
+  </div>
+</div>

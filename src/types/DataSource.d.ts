@@ -17,3 +17,18 @@ extends Identified {
 
     variants?: string[];
 }
+
+interface LdevInfo
+{
+    eccGroup: string;
+    id: string;
+    name: string;
+    size: number;
+    mpu: string;
+    poolName: string;
+
+    hostnames: string[];
+    ports: string[];
+    wwnNames: string[];
+    wwnNicknames: string[];
+}

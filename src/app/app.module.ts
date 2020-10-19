@@ -13,6 +13,7 @@ import { TraceListComponent } from './components/trace-list/trace-list.component
 import { GraphViewComponent } from './components/graph-view/graph-view.component';
 import { TraceImportModalComponent } from './components/trace-import-modal/trace-import-modal.component';
 import { TresholdModalComponent } from './components/treshold-modal/treshold-modal.component';
+import { LdevMapModalComponent } from './components/ldev-map-modal/ldev-map-modal.component';
 
 import { DataService } from './services/data.service';
 import { ControlsService } from './services/controls.service';
@@ -38,6 +39,7 @@ import { GridsterModule } from 'angular-gridster2';
     GraphViewComponent,
     TraceImportModalComponent,
     TresholdModalComponent,
+    LdevMapModalComponent,
   ],
   imports: [
     BrowserModule,

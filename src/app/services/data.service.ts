@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Md5} from 'ts-md5/dist/md5';
 import { deserializers } from './deserialization';
+import { JsonPipe } from '@angular/common';
 
 const getApiPath = (...segments: string[]) => '/api/v2/' + segments.join('/');
 
@@ -35,6 +36,16 @@ export class DataService {
       getApiPath('data'),
       request,
       { responseType: 'arraybuffer' }
+    ).toPromise();
+  }
+
+  async getLdevMap(source: string, ldev: string): Promise<LdevInfo> {
+    return await this.http.post<LdevInfo>(
+      getApiPath('data', source, 'features', 'ldev_map'),
+      { id: ldev },
+      {
+        responseType: 'json',
+      }
     ).toPromise();
   }
 
