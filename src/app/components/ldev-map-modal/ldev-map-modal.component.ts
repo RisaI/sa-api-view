@@ -28,7 +28,11 @@ export class LdevMapModalComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.ldevId && changes.ldevId.currentValue && changes.ldevId.currentValue !== changes.ldevId.previousValue) {
-      this.dataClient.getLdevMap(this.sourceId, this.ldevId).then(ldev => { this.ldevInfo = ldev; console.log(ldev); });
+      this.dataClient.getLdevMap(this.sourceId, this.ldevId).then(ldev => this.ldevInfo = ldev);
     }
   }
+
+  getHostgroups = () => this.ldevInfo.hostPorts.map(hp => hp.hostgroup).filter((v, i, a) => a.indexOf(v) === i);
+  getPorts = (hostgroup: string) => this.ldevInfo.hostPorts.filter(v => v.hostgroup === hostgroup);
+  getWwns = (hostport: HostPort) => this.ldevInfo.wwns.filter(w => w.hostgroup === hostport.hostgroup && w.port === hostport.port);
 }

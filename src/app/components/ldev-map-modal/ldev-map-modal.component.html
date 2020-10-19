@@ -7,6 +7,30 @@
       </div>
 
       <div class="modal-body">
+        <ul *ngIf="ldevInfo != null; else loading">
+          <li>LDEV: {{ldevInfo.id}} [{{ldevInfo.name}}]</li>
+          <li>SIZE: {{ldevInfo.size}}</li>
+          <li>MPU: {{ldevInfo.mpu}}</li>
+          <li>POOL: {{ldevInfo.poolName}}</li>
+          <li>
+            HOST:
+            <ul>
+              <li *ngFor="let hostgroup of getHostgroups()">
+                {{hostgroup}}
+                <ul>
+                  <li *ngFor="let hostport of getPorts(hostgroup)">
+                    {{hostport.port}}
+                    <ul>
+                      <li *ngFor="let wwn of getWwns(hostport)">
+                        {{wwn.wwn}} [{{wwn.nickname}}]
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
         <ng-template #loading>
           Načítá se mapa...
         </ng-template>

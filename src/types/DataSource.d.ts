@@ -27,8 +27,26 @@ interface LdevInfo
     mpu: string;
     poolName: string;
 
-    hostnames: string[];
-    ports: string[];
-    wwnNames: string[];
-    wwnNicknames: string[];
+    // hostnames: string[];
+    // ports: string[];
+    // wwnNames: string[];
+    // wwnNicknames: string[];
+
+    hostPorts: HostPort[];
+    wwns: WWNInfo[];
+}
+
+interface HostPort
+{
+    hostgroup: string;
+    port: string;
+}
+
+interface WWNInfo
+{
+    hostgroup: string;
+    port: string;
+    wwn: string;
+    nickname: string;
+    location: string;
 }

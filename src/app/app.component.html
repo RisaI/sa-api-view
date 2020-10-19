@@ -31,6 +31,7 @@
   </ng-container>
 
   <ng-template #noGraph>
+    <!-- <ul><button (click)="ldevSourceId = 'disk'; ldevId = '00:02:42'"></button></ul> -->
     <ul class="sidebar-menu"><li class="header">VYBERTE GRAF</li></ul>
   </ng-template>
 </app-side-menu>
@@ -75,4 +76,11 @@
   (import)="importTraces($event)"
   (addGraph)="onAddGraph($event)"
 ></app-trace-import-modal>
+<app-ldev-map-modal
+  [show]="ldevId !== undefined"
+  [sourceId]="ldevSourceId"
+  [ldevId]="ldevId"
+
+  (toggle)="ldevSourceId = ldevId = undefined"
+></app-ldev-map-modal>
 <app-treshold-modal [show]="tresholdOpen" (toggle)="tresholdOpen = false" (treshold)="filterTreshold($event)"></app-treshold-modal>

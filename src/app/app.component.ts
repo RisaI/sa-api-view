@@ -26,6 +26,9 @@ export class AppComponent {
   selectedGraph?: (Graph & GridsterItem) = undefined;
   selectedTraces: Trace['id'][] = [];
 
+  ldevSourceId: string | undefined = undefined;
+  ldevId: string | undefined = undefined;
+
   constructor(
     private controlsService: ControlsService,
     private dataService: DataService,
@@ -80,8 +83,8 @@ export class AppComponent {
     }
   }
 
-  showLdevMap(id: string): void {
-    console.log(id);
+  showLdevMap(id: [string, string] ): void {
+    [ this.ldevSourceId, this.ldevId ] = id;
   }
 
   async filterZero(): Promise<void> {
