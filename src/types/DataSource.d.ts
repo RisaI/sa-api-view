@@ -1,6 +1,7 @@
 interface DataSource
 extends Identified {
     datasets: Dataset[];
+    features: string[];
 }
 
 interface Dataset

@@ -3,7 +3,7 @@ import { TreeviewItem } from 'ngx-treeview';
 import { DataService } from 'src/app/services/data.service';
 import { parseTimestamp, dateToTimestamp } from 'src/app/services/deserialization';
 
-type CTrace = Trace & { availableRange: [any, any], xtype: string };
+type CTrace = Trace & { availableRange: [any, any], xtype: string, variants?: string[] };
 
 @Component({
   selector: 'app-trace-import-modal',
@@ -43,7 +43,7 @@ export class TraceImportModalComponent implements OnInit, OnChanges {
         checked: false,
         children: source.datasets.map(set => new TreeviewItem({
           text: set.name,
-          value: set.variants?.length ? undefined : {
+          value: /*set.variants?.length ? undefined : */ {
             id: `${set.source}:${set.id}`,
             title: set.name,
             pipeline: {
@@ -53,29 +53,30 @@ export class TraceImportModalComponent implements OnInit, OnChanges {
                 id: set.id,
               }
             },
+            variants: set.variants,
             availableRange: set.availableXRange,
             xtype: set.xType
           } as CTrace,
           collapsed: true,
           checked: false,
-          children: set.variants?.length ? set.variants.map(v => new TreeviewItem({
-            text: v,
-            value: {
-              id: `${set.source}:${set.id}:${v}`,
-              title: `${set.name} (${v})`,
-              pipeline: {
-                type: 'data',
-                dataset: {
-                  source: set.source,
-                  id: set.id,
-                  variant: v,
-                }
-              },
-              availableRange: set.availableXRange,
-              xtype: set.xType
-            } as CTrace,
-            checked: false,
-          })) : undefined,
+          // children: set.variants?.length ? set.variants.map(v => new TreeviewItem({
+          //   text: v,
+          //   value: {
+          //     id: `${set.source}:${set.id}:${v}`,
+          //     title: `${set.name} (${v})`,
+          //     pipeline: {
+          //       type: 'data',
+          //       dataset: {
+          //         source: set.source,
+          //         id: set.id,
+          //         variant: v,
+          //       }
+          //     },
+          //     availableRange: set.availableXRange,
+          //     xtype: set.xType
+          //   } as CTrace,
+          //   checked: false,
+          // })) : undefined,
         }))
       }));
     });
@@ -100,6 +101,28 @@ export class TraceImportModalComponent implements OnInit, OnChanges {
 
   onImport(): void {
     this.toggle.emit();
+    const selected: CTrace[] = [];
+
+    this.selected.forEach(t => {
+      if (t.variants) {
+        selected.push(...t.variants.map(v => ({
+          ...t,
+          id: `${t.id}:${v}`,
+          title: `${t.title} (${v})`,
+          variants: undefined,
+          pipeline: {
+            ...t.pipeline,
+            dataset: {
+              ...(t.pipeline as DataNodeDescriptor).dataset,
+              variant: v,
+            }
+          }
+        })));
+      } else {
+        selected.push(t)
+      }
+    });
+
     if (!this.graph) {
       this.addGraph.emit({
         id: 0,
@@ -109,10 +132,10 @@ export class TraceImportModalComponent implements OnInit, OnChanges {
         yLabel: this.yLabel,
 
         xRange: this.timeRange.map(dateToTimestamp) as [number, number],
-        traces: this.selected
+        traces: selected
       });
     } else {
-      this.import.emit(this.selected);
+      this.import.emit(selected);
     }
   }
 

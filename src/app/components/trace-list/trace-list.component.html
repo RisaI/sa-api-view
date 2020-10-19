@@ -5,6 +5,6 @@
         [class.active]="selected.indexOf(trace.id) >= 0"
         (click)="toggle.emit(trace.id)"
     >
-        {{trace.title}}
+        {{trace.title}} <span *ngIf="hasLdevMaps(trace)" >(I)</span>
     </li>
 </ul>
